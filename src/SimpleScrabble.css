@@ -63,27 +63,17 @@
     color: #ffffff;
 }
 
-#scoreRow,
-#lastTileSectionRow,
-#finalScoreSectionRows {
-    display: flex;
-    flex-direction: row;
-    table-layout: fixed;
-    width: 70vw;
-    margin: 0 auto;
-    margin-top: 10px;
-    white-space: nowrap;
-}
-
-#scoreRow div,
-#lastTileSectionRow div,
-#finalScoreSectionRows div {
-    flex: 1 1 auto;
-    display: nline-block;
+.ScoreTable,
+.PlayerLastTilesSection,
+.FinalScoreSections {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
 }
 
 .PlayerScore {
     color: #ffffff;
+    padding: 0 2px;
 }
 
 .PlayerScore p {
@@ -113,7 +103,6 @@
     padding: 30px 0;
     border: #501919 solid 3px;
     text-shadow: 2px 2px 2px #000000;
-    
 }
 
 .WordEnter,
@@ -150,12 +139,17 @@
     color: #ff4242;
 }
 
-.RegularTile,
-.DoubleLetterTile,
-.TripleLetterTile,
-.DoubleWorldTile,
-.TripleWordTile,
-.ScoreTile {
+.SmallTile {
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1px;
+    display: inline-block;
+}
+
+.RegularTile {
     height: 60px;
     width: 60px;
     text-align: center;
@@ -166,52 +160,27 @@
     cursor: pointer;
 }
 
-.RegularTileS,
-.DoubleLetterTileS,
-.TripleLetterTileS,
-.DoubleWorldTileS,
-.TripleWordTileS,
-.BlankTileS {
-    height: 40px;
-    width: 40px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 1px;
-    display: inline-block;
-}
-
-.ScoreTile {
-    background-color: #7fc2d6;
-    border: #1e5d70 solid 2px;
-}
-
-.RegularTile,
-.RegularTileS {
+#color0 {
     background-color: #cca774;
     border: #5f4f38 solid 2px;
 }
 
-.DoubleLetterTile,
-.DoubleLetterTileS {
+#color1 {
     background-color: #81b0e6;
-    border: #4d7aad solid 2px;
+    border: #3c6594 solid 2px;
 }
 
-.TripleLetterTile,
-.TripleLetterTileS {
-    background-color: #2967a1;
-    border: #254175 solid 2px;
+#color2 {
+    background-color: #117197;
+    border: #0c445a solid 2px;
 }
 
-.DoubleWorldTile,
-.DoubleWorldTileS {
+#color3 {
     background-color: #cf8570;
     border: #9e5d4b solid 2px;
 }
 
-.TripleWordTile,
-.TripleWordTileS {
+#color4 {
     background-color: #be3922;
     border: #83211d solid 2px;
 }
@@ -219,6 +188,7 @@
 .ShowBingoPoints {
     padding-left: 20px;
     font-size: 30px;
+    font-weight: bold;
 }
 
 .CheckWordRow {
@@ -297,27 +267,6 @@
     border: #307240 solid 3px; 
 }
 
-
-/* .Bingo {
-    background-color: #e6cf4f;
-    border: #776b28 solid 3px;
-}
-
-.ConfirmWord {
-    background-color: #9de0ff;
-    border: #317594 solid 3px;
-}
-
-.EndGame {
-    background-color: #f75151;
-    border: #8b3939 solid 3px;
-}
-
-.WordCheck {
-    background-color: #788ff7;
-    border: #3a4672 solid 3px;
-}  */
-
 .ConfirmWord:hover,
 .FinalizeGame:hover,
 .PlayAgain:hover,
@@ -338,11 +287,16 @@
     background-color: #ffffff;
     padding: 6px 20px;
     margin-top: 8px;
-    width: 150px;
+    width: 180px;
     outline: none;
     font-size: 20px;
     font-weight: bold;
     resize: none;
     border-radius: 5px;
     border: #dbdbdb solid 2px;
+}
+
+#scoreTileColor {
+    background-color: #9de0ff;
+    border: #317594 solid 3px;
 }

@@ -9,6 +9,8 @@ function SimpleScrabble() {
   type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], finalScore: string[], otherPlayerTiles: { tiles: string[], score: number} }
   const [playerInfo, setPlayerInfo] = useState<singlePlayerInfo[]>([]);
 
+  const [remainingLetters, setRemainingLetters] = useState<{word: string, letters: string[]}[]>([]);
+
   const [enteredNames, setEnteredNames] = useState(['', '', '', '']);
 
   const [playerTurn, setPlayerTurn] = useState(0);
@@ -46,33 +48,39 @@ function SimpleScrabble() {
 
   const setupAndStartGame = () => {
     let temp = [];
+    let temp2 = [];
     for (let n of enteredNames) {
       if (n.length > 0) {
         temp.push({ name: n, score: 0, words: [], lostPoints: 0, lastLetters: [], finalScore: [], otherPlayerTiles: { tiles: [], score: 0}});
+        temp2.push({word: '', letters: []});
       }
     }
 
     if (temp.length === 0) return;
 
     setPlayerInfo(temp);
+    setRemainingLetters(temp2);
     setNameScreen(false);
     loadScrabbleWords();
   }
 
-  const configEnteredWord = (w: string) => {
-    w = w.toLowerCase();
+  const filterAndLowercaseLetters = (w:string) => {
     let filtered = '';
-    let temp = [];
-    for (let l of w) {
-      if (validLetters.includes(l)) {
-        temp.push({ letter: l, mult: 0 });
-        filtered+=l;
-      }
+    for (let l of w.toLowerCase()) {
+      if (validLetters.includes(l)) filtered+=l;
     }
+    return filtered;
+  }
+
+  const configEnteredWord = (x: string) => {
+    let w = filterAndLowercaseLetters(x);
+
+    let temp = [];
+    for (let l of w) temp.push({ letter: l, mult: 0 });
 
     setChangeTile(false);
     setShowIsValidWord(false);
-    setEnteredWord(filtered);
+    setEnteredWord(w);
     setEnteredTiles(temp);
   }
 
@@ -201,19 +209,25 @@ function SimpleScrabble() {
     setEnterTilesLeft(true);
   }
 
-  const setRemainingTiles = (i: number, s: string) => {
+  const configureRemainingTiles = (i: number, s: string) => {
+    let temp = [...remainingLetters];
+    let filtered = filterAndLowercaseLetters(s);
+    let lettersFiltered = [];
+    for (let l of filtered) lettersFiltered.push(l);
+
+    temp[i] = {word: filtered, letters: lettersFiltered};
+    setRemainingLetters(temp);
+  }
+
+  const setRemainingTiles = () => {
     let temp = [...playerInfo];
-
-    let remainingTiles = [];
-    for (let l of s.toLowerCase()) {
-      remainingTiles.push(l);
-    }
-
-    temp[i].lastLetters = remainingTiles;
+    for (let i = 0; i < temp.length; i++) temp[i].lastLetters = remainingLetters[i].letters;
     setPlayerInfo(temp);
   }
 
   const finalizeGame = () => {
+    setRemainingTiles();
+
     let temp = [...playerInfo];
     let allTilesLeft: string[] = [];
     let allTilesLeftScore = 0;
@@ -275,6 +289,7 @@ function SimpleScrabble() {
   const playAgain = () => {
     setNameScreen(true);
     setPlayerInfo([]);
+    setRemainingLetters([]);
     setEnteredNames(['', '', '', '']);
     setPlayerTurn(0);
     setEnteredTiles([]);
@@ -317,7 +332,7 @@ function SimpleScrabble() {
           <h1>scrabble calc</h1>
 
           <div className="ScoreInfo">  
-            <div className="ScoreTable" id="scoreRow">
+            <div className="ScoreTable">
               {playerInfo.map((info, i) => (
                 <div className="PlayerScore" key={i}>
                   <h2>{info.name}</h2>
@@ -326,21 +341,7 @@ function SimpleScrabble() {
                     <div className="PlayerWordHistory" key={k}>
                       {wordInfo.word.map((letter, j) => (
                         <span className="IndividualTile" key={j}>
-                          {wordInfo.mult[j] === 0 &&
-                            <button className="RegularTileS">{letter}</button>
-                          }
-                          {wordInfo.mult[j] === 1 &&
-                            <button className="DoubleLetterTileS">{letter}</button>
-                          }
-                          {wordInfo.mult[j] === 2 &&
-                            <button className="TripleLetterTileS">{letter}</button>
-                          }
-                          {wordInfo.mult[j] === 3 &&
-                            <button className="DoubleWorldTileS">{letter}</button>
-                          }
-                          {wordInfo.mult[j] === 4 &&
-                            <button className="TripleWordTileS">{letter}</button>
-                          }
+                          <button className="SmallTile" id={'color' + wordInfo.mult[j]}>{letter}</button>
                         </span>
                       ))}
 
@@ -356,7 +357,7 @@ function SimpleScrabble() {
                     <div className="SubtractedTiles" key={i}>
                       {info.lastLetters.map((lastLetter, p) => (
                         <span className="LastTiles" key={p}>
-                          <button className="RegularTileS">{lastLetter}</button>
+                          <button className="SmallTile" id="color0">{lastLetter}</button>
                         </span>
                       ))}
 
@@ -368,7 +369,7 @@ function SimpleScrabble() {
                     <div className="OtherPlayerTiles" key={'opt' + i}>
                       {info.otherPlayerTiles.tiles.map((tile, y) => (
                         <span className="OtherPlayerTile" key={y}>
-                          <button className="RegularTileS">{tile}</button>
+                          <button className="SmallTile" id='color0'>{tile}</button>
                         </span>
                       ))}
 
@@ -389,36 +390,22 @@ function SimpleScrabble() {
               <div className="EnteredTiles">
                 {enteredTiles.map((tile, i) => (
                   <span className="IndividualTile" key={i}>
-                    {tile.mult === 0 &&
-                      <button className="RegularTile" onClick={() => changeTileType(i)}>{tile.letter}</button>
-                    }
-                    {tile.mult === 1 &&
-                      <button className="DoubleLetterTile" onClick={() => changeTileType(i)}>{tile.letter}</button>
-                    }
-                    {tile.mult === 2 &&
-                      <button className="TripleLetterTile" onClick={() => changeTileType(i)}>{tile.letter}</button>
-                    }
-                    {tile.mult === 3 &&
-                      <button className="DoubleWorldTile" onClick={() => changeTileType(i)}>{tile.letter}</button>
-                    }
-                    {tile.mult === 4 &&
-                      <button className="TripleWordTile" onClick={() => changeTileType(i)}>{tile.letter}</button>
-                    }
+                    <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)}>{tile.letter}</button>
                   </span>
                 ))}
 
                 {isBingo &&
-                   <span className="ShowBingoPoints">[+50]</span>
+                   <span className="ShowBingoPoints">+50</span>
                 }
               </div>
 
               {changeTile &&
                 <div className="ChangeTileType">
-                  <button className="RegularTile" onClick={() => setNewTypeType(0)}></button>
-                  <button className="DoubleLetterTile" onClick={() => setNewTypeType(1)}></button>
-                  <button className="TripleLetterTile" onClick={() => setNewTypeType(2)}></button>
-                  <button className="DoubleWorldTile" onClick={() => setNewTypeType(3)}></button>
-                  <button className="TripleWordTile" onClick={() => setNewTypeType(4)}></button>
+                  <button className="RegularTile" id="color0" onClick={() => setNewTypeType(0)}></button>
+                  <button className="RegularTile" id="color1" onClick={() => setNewTypeType(1)}></button>
+                  <button className="RegularTile" id="color2" onClick={() => setNewTypeType(2)}></button>
+                  <button className="RegularTile" id="color3" onClick={() => setNewTypeType(3)}></button>
+                  <button className="RegularTile" id="color4" onClick={() => setNewTypeType(4)}></button>
                 </div>
               }
 
@@ -462,30 +449,30 @@ function SimpleScrabble() {
             <div className="EndGameSection">
               {!showFinalScore ?
                 <div className="LastTiles">
-                  <div className="PlayerLastTilesSection" id="lastTileSectionRow">
-                    {playerInfo.map((info, i) => (
-                      <div className="LastTilesInput" key={i}>
-                        <h2>{info.name}</h2>
+                    <div className="PlayerLastTilesSection">
+                      {playerInfo.map((info, i) => (
+                        <div className="LastTilesInput" key={i}>
+                          <h2>{info.name}</h2>
 
-                        <div className="LastTilesTile">
-                          {info.lastLetters.map((letter, j) => (
-                            <span className="IndividualTile" key={j}>
-                              <button className="RegularTileS">{letter}</button>
-                            </span>
-                          ))}
+                          <div className="LastTilesTile">
+                            {remainingLetters[i].letters.map((letter, j) => (
+                              <span className="IndividualTile" key={j}>
+                                <button className="SmallTile" id="color0">{letter}</button>
+                              </span>
+                            ))}
+                          </div>
+
+                          <input
+                            placeholder="what's left?"
+                            name="playerNameInput"
+                            id="playerNameInput"
+                            autoComplete='off'
+                            value={remainingLetters[i].word}
+                            onChange={(e) => configureRemainingTiles(i, e.target.value)}
+                          />
                         </div>
-
-                        <input
-                          placeholder="what's left?"
-                          name="playerNameInput"
-                          id="playerNameInput"
-                          autoComplete='off'
-                          onChange={(e) => setRemainingTiles(i, e.target.value)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-
+                      ))}
+                    </div>
                   <button className="FinalizeGame" onClick={() => finalizeGame()}>Finalize Game</button>
                 </div>
 
@@ -494,14 +481,14 @@ function SimpleScrabble() {
                 <div className="FinalizeScores">
                   <h1>final scores</h1>
 
-                  <div className="FinalScoreSections" id="finalScoreSectionRows">
+                  <div className="FinalScoreSections">
                     {playerInfo.map((info, i) => (
                       <div className="PlayerIndividualScore" key={i}>
                         <h2>{info.name}</h2>
 
                         {info.finalScore.map((num, k) => (
                           <span className="ScoreTiles" key={k}>
-                            <button className="ScoreTile">{num}</button>
+                            <button className="RegularTile" id="scoreTileColor">{num}</button>
                           </span>
                         ))}
                       </div>
