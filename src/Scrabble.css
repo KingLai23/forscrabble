@@ -1,0 +1,151 @@
+:root {
+    --tileSize: 5vh;
+    --playerSelectTileSize: 6vh;
+}
+
+.Scrabble,
+.Container {
+    background-color: #000000;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.GameSetup h1 {
+    margin: 0;
+    color: #ffffff;
+    padding-top: 20vh;
+}
+
+.NameInput input {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 7px 30px;
+    margin-top: 5px;
+    width: 12vw;
+    outline: none;
+    font-size: 2vh;
+    resize: none;
+    border-radius: 10px;
+}
+
+.confirmPlayerNames {
+    text-align: center;
+    background-color: #6ad6e9;
+    padding: 7px 30px;
+    margin-top: 5px;
+    width: 10vw;
+    outline: none;
+    font-size: 2vh;
+    resize: none;
+    border-radius: 10px;
+}
+
+.confirmPlayerNames:hover {
+    cursor: pointer;
+}
+
+.choosePlayerButton {
+    height: var(--playerSelectTileSize);
+    width: var(--playerSelectTileSize);
+    background-color: #c4a67c;
+    font-size: 2.4vh;
+    font-weight: bold;
+    margin: 0 0.25vh;
+}
+
+.ChoosePlayerButtons {
+    margin-top: 1vh;
+}
+
+.choosePlayerButton:hover {
+    cursor: pointer;
+}
+
+.Scrabble h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 2.5vh;
+}
+
+.endTurn {
+    text-align: center;
+    background-color: #ec7b5f;
+    padding: 3px 5px;
+    margin: 3px;
+    width: 8vw;
+    outline: none;
+    font-size: 1.8vh;
+    font-weight: bold;
+    resize: none;
+    border-radius: 10px;
+}
+
+.endTurn:hover {
+    cursor: pointer;
+}
+
+.ScrabbleBoardRow {
+    display: flex;
+}
+
+.ScrabbleBoard {
+    width: 75vh;
+    margin: auto;
+}
+
+.Alphabet {
+    width: 70vh;
+    margin: auto;
+}
+
+.alpha,
+.button,
+.button0,
+.button1,
+.button2,
+.button3,
+.button4 {
+    height: var(--tileSize);
+    width: var(--tileSize);
+    text-align: center;
+    font-size: 2.4vh;
+    font-weight: bold;
+}
+
+.alpha:hover,
+.button:hover,
+.button0:hover,
+.button1:hover,
+.button2:hover,
+.button3:hover,
+.button4:hover {
+    cursor: pointer;
+}
+
+.alpha {
+    background-color: #b3874d
+}
+
+.button {
+    background-color: #c4a67c;
+}
+
+.button0 {
+    background-color: #976351;
+}
+
+.button1 {
+    background-color: #81b0e6;
+}
+
+.button2 {
+    background-color: #20478f;
+}
+
+.button3 {
+    background-color: #cf8570;
+}
+
+.button4 {
+    background-color: #be2722;
+}

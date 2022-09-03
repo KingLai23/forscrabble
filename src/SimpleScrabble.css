@@ -1,0 +1,348 @@
+.SimpleScrabble {
+    padding: 20px 0;
+}
+
+.NameScreen {
+    padding-top: 20vh;
+}
+
+.NameScreen h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.InputBar input {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 10px 0;
+    margin-top: 8px;
+    width: 280px;
+    outline: none;
+    font-size: 20px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 8px;
+    border: none;
+    border: #dbdbdb solid 2px;
+}
+
+.confirmPlayerNames {
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    width: 280px;
+    outline: none;
+    font-size: 20px;
+    resize: none;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #9de0ff;
+    border: #317594 solid 3px;
+    cursor: pointer;
+}
+
+.confirmPlayerNames:hover {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25) 0 0);
+}
+
+.ScrabbleGame h1 {
+    margin: 0;
+    padding-top: 2vh;
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.ScoreInfo {
+    padding-top: 2vh;
+}
+
+.ScoreInfo h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #ffffff;
+}
+
+#scoreRow,
+#lastTileSectionRow,
+#finalScoreSectionRows {
+    display: flex;
+    flex-direction: row;
+    table-layout: fixed;
+    width: 70vw;
+    margin: 0 auto;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+#scoreRow div,
+#lastTileSectionRow div,
+#finalScoreSectionRows div {
+    flex: 1 1 auto;
+    display: nline-block;
+}
+
+.PlayerScore {
+    color: #ffffff;
+}
+
+.PlayerScore p {
+    font-size: 2vh;
+}
+
+.PlayerWordHistory {
+    margin-bottom: 8px;
+}
+
+.PlayerWordScore {
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+
+.ScoreTable,
+.WordEnter,
+.EndGameSection {
+    color: #ffffff;
+    /* background-image: linear-gradient(to bottom right, #491e1e, #663737, #795858); */
+    background-color: #ad2727;
+    margin: auto;
+    width: 70vw;
+    border-radius: 5px;
+    margin-top: 16px;
+    padding: 30px 0;
+    border: #501919 solid 3px;
+    text-shadow: 2px 2px 2px #000000;
+    
+}
+
+.WordEnter,
+.EndGameSection {
+    background-color: #b48d53;
+}
+
+.WordEnter h2,
+.ScoreTable h2,
+.LastTiles h2 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.WordInputBar input {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 260px;
+    outline: none;
+    font-size: 22px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 5px;
+    border: #dbdbdb solid 3px;
+}
+
+#validWord {
+    color: #48f35f;
+}
+
+#invalidWord {
+    color: #ff4242;
+}
+
+.RegularTile,
+.DoubleLetterTile,
+.TripleLetterTile,
+.DoubleWorldTile,
+.TripleWordTile,
+.ScoreTile {
+    height: 60px;
+    width: 60px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin: 1px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.RegularTileS,
+.DoubleLetterTileS,
+.TripleLetterTileS,
+.DoubleWorldTileS,
+.TripleWordTileS,
+.BlankTileS {
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1px;
+    display: inline-block;
+}
+
+.ScoreTile {
+    background-color: #7fc2d6;
+    border: #1e5d70 solid 2px;
+}
+
+.RegularTile,
+.RegularTileS {
+    background-color: #cca774;
+    border: #5f4f38 solid 2px;
+}
+
+.DoubleLetterTile,
+.DoubleLetterTileS {
+    background-color: #81b0e6;
+    border: #4d7aad solid 2px;
+}
+
+.TripleLetterTile,
+.TripleLetterTileS {
+    background-color: #2967a1;
+    border: #254175 solid 2px;
+}
+
+.DoubleWorldTile,
+.DoubleWorldTileS {
+    background-color: #cf8570;
+    border: #9e5d4b solid 2px;
+}
+
+.TripleWordTile,
+.TripleWordTileS {
+    background-color: #be3922;
+    border: #83211d solid 2px;
+}
+
+.ShowBingoPoints {
+    padding-left: 20px;
+    font-size: 30px;
+}
+
+.CheckWordRow {
+    margin-top: 8px;
+}
+
+.EndGameRow {
+    margin-top: 50px;
+}
+
+.ConfirmWord,
+.EndTurn,
+.EndGame,
+.FinalizeGame,
+.Bingo,
+.PlayAgain,
+.WordCheck,
+.UndoLastWord {
+    text-align: center;
+    padding: 14px 0;
+    margin: 16px 5px 0;
+    width: 150px;
+    outline: none;
+    font-size: 15px;
+    resize: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #9de0ff;
+    border: #317594 solid 3px;
+}
+
+.EndTurn {
+    width: 110px;
+    margin-right: 0;
+}
+
+.Bingo,
+.ConfirmWord,
+.UndoLastWord,
+.WordCheck {
+    width: 185px;
+}
+
+.WordCheck,
+.UndoLastWord {
+    padding: 8px 0;
+    margin-top: 0;
+}
+
+.EndGame {
+    width: 220px;
+    padding: 8px 0;
+    margin-top: 0;
+}
+
+.FinalizeGame {
+    width: 180px;
+}
+
+.PlayAgain {
+    width: 200px;
+    padding: 16px 0;
+    font-size: 16px;
+    margin-top: 40px;
+}
+
+.EndGame {
+    background-color: #ff3838;
+    border: #ac2828 solid 3px;
+}
+
+.EndTurn {
+    background-color: #58e67b;
+    border: #307240 solid 3px; 
+}
+
+
+/* .Bingo {
+    background-color: #e6cf4f;
+    border: #776b28 solid 3px;
+}
+
+.ConfirmWord {
+    background-color: #9de0ff;
+    border: #317594 solid 3px;
+}
+
+.EndGame {
+    background-color: #f75151;
+    border: #8b3939 solid 3px;
+}
+
+.WordCheck {
+    background-color: #788ff7;
+    border: #3a4672 solid 3px;
+}  */
+
+.ConfirmWord:hover,
+.FinalizeGame:hover,
+.PlayAgain:hover,
+.Bingo:hover,
+.EndTurn:hover,
+.EndGame:hover,
+.WordCheck:hover,
+.UndoLastWord:hover {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25) 0 0);
+}
+
+.LastTiles p {
+    color: #ffffff;
+}
+
+.LastTilesInput input {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 6px 20px;
+    margin-top: 8px;
+    width: 150px;
+    outline: none;
+    font-size: 20px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 5px;
+    border: #dbdbdb solid 2px;
+}
