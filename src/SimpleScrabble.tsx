@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import './SimpleScrabble.css';
+import { gql, useApolloClient } from '@apollo/client';
 
 function SimpleScrabble() {
+  const apolloClient = useApolloClient();
+
   const [nameScreen, setNameScreen] = useState(true);
 
   const [scrabbleWords, setScrabbleWords] = useState<string[]>([]);
@@ -29,7 +32,13 @@ function SimpleScrabble() {
   const [isValidWord, setIsValidWord] = useState(false);
   const [showIsValidWord, setShowIsValidWord] = useState(false);
 
-  const validLetters = 'abcdefghijklmnopqrstuvwxyz_';
+
+  const [isGameSaved, setIsGameSaved] = useState(false);
+  const [showGameHistory, setShowGameHistory] = useState(false);
+  const [gameHistory, setGameHistory] = useState<{players: string[], gameInfo: singlePlayerInfo[], date: string}[]>([]);
+
+  // const validLettersLower = 'abcdefghijklmnopqrstuvwxyz';
+  const validLettersUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   const setName = (i: number, n: string) => {
     let temp = [...enteredNames];
@@ -66,8 +75,8 @@ function SimpleScrabble() {
 
   const filterAndLowercaseLetters = (w:string) => {
     let filtered = '';
-    for (let l of w.toLowerCase()) {
-      if (validLetters.includes(l)) filtered+=l;
+    for (let l of w.toUpperCase()) {
+      if (validLettersUpper.includes(l)) filtered+=l;
     }
     return filtered;
   }
@@ -149,12 +158,14 @@ function SimpleScrabble() {
     let wordMult = 1;
 
     for (let tile of enteredTiles) {
-      let value = getTileValue(tile.letter);
+      let value = getTileValue(tile.letter.toLowerCase());
 
       if (tile.mult === 1 || tile.mult === 2) {
         value*=(tile.mult + 1);
       } else if (tile.mult === 3 || tile.mult === 4) {
         wordMult *=(tile.mult - 1);
+      } else if (tile.mult === 5) {
+        value = 0;
       }
 
       beforeWordMult += value;
@@ -242,7 +253,7 @@ function SimpleScrabble() {
         playerWithNoTilesLeft = i;
       } else {
         for (let letter of temp[i].lastLetters) {
-          totalSubtraction+=getTileValue(letter);
+          totalSubtraction+=getTileValue(letter.toLowerCase());
         }
   
         temp[i].lostPoints = totalSubtraction;
@@ -272,6 +283,7 @@ function SimpleScrabble() {
   }
 
   const wordCheck = () => {
+    if (enteredWord.length === 0) return;
     setIsValidWord(scrabbleWords.indexOf(enteredWord.toUpperCase()) > -1);
     setShowIsValidWord(true);
   }
@@ -300,13 +312,97 @@ function SimpleScrabble() {
     setEnterTilesLeft(false);
     setShowFinalScore(false);
     setShowIsValidWord(false);
+    setIsGameSaved(false);
+    setShowGameHistory(false);
+    setGameHistory([]);
+  }
+
+  const getGames = () => {
+    if (showGameHistory) return;
+
+    let players = [];
+    for (let p of playerInfo) players.push(p.name);
+    players.sort();
+
+    const GET_SCRABBLE_GAMES_BY_PLAYER = gql`
+      query getScrabbleGamesByPlayers($players: [String]) {
+        getScrabbleGamesByPlayers(players: $players) {
+          players
+          gameInfo {
+            name
+            score
+            words {
+              word
+              mult
+              points
+              bingo
+            }
+            lostPoints
+            lastLetters
+            otherPlayerTiles {
+              tiles
+              score
+            }
+            finalScore
+          }
+          date
+        }
+      }
+    `;
+
+    apolloClient
+        .query({
+            query: GET_SCRABBLE_GAMES_BY_PLAYER,
+            variables: { players }
+        })
+        .then((res) => {
+            setShowGameHistory(true);
+            setGameHistory(res.data.getScrabbleGamesByPlayers);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  }
+
+  const saveGame = () => {
+    if (isGameSaved) return;
+
+    let players: string[] = [];
+    for (let p of playerInfo) players.push(p.name);
+    players.sort();
+
+    let gameInfo = playerInfo;
+
+    const SAVE_SCRABBLE_GAME = gql`
+      mutation addScrabbleGame($players: [String], $gameInfo: [GameInfoInput]) {
+        addScrabbleGame(players: $players, gameInfo: $gameInfo) {
+          id
+        }
+      }
+    `;
+
+    apolloClient
+      .mutate({
+        mutation: SAVE_SCRABBLE_GAME,
+        variables: { players, gameInfo }
+      })
+      .then((res) => {
+        setIsGameSaved(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
     <div className="SimpleScrabble">
+      <div className="Title">
+        <h1>scrabble calc</h1>
+      </div>
+      
       {nameScreen ?
         <div className="NameScreen">
-          <h1>enter names?</h1>
+          <h1>enter names</h1>
 
           <div className="InputBars">
             {enteredNames.map((n: string, i: number) => (
@@ -329,8 +425,6 @@ function SimpleScrabble() {
         :
 
         <div className="ScrabbleGame">
-          <h1>scrabble calc</h1>
-
           <div className="ScoreInfo">  
             <div className="ScoreTable">
               {playerInfo.map((info, i) => (
@@ -341,7 +435,11 @@ function SimpleScrabble() {
                     <div className="PlayerWordHistory" key={k}>
                       {wordInfo.word.map((letter, j) => (
                         <span className="IndividualTile" key={j}>
-                          <button className="SmallTile" id={'color' + wordInfo.mult[j]}>{letter}</button>
+                          {wordInfo.mult[j] === 5 ?
+                            <button className="SmallTile" id='color5'/>
+                            :
+                            <button className="SmallTile" id={'color' + wordInfo.mult[j]}>{letter}</button>
+                          }
                         </span>
                       ))}
 
@@ -377,6 +475,13 @@ function SimpleScrabble() {
                     </div>
                   }
 
+                </div>
+              ))}
+            </div>
+
+            <div className="PlayerTotalScore">
+              {playerInfo.map((info, i) => (
+                <div className="IndividualScore" key={i}>
                   <h1>{info.score}</h1>
                 </div>
               ))}
@@ -390,7 +495,11 @@ function SimpleScrabble() {
               <div className="EnteredTiles">
                 {enteredTiles.map((tile, i) => (
                   <span className="IndividualTile" key={i}>
-                    <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)}>{tile.letter}</button>
+                    {tile.mult === 5 ?
+                      <button className="RegularTile" id='color5' onClick={() => changeTileType(i)}/>
+                      :
+                      <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)}>{tile.letter}</button>
+                    }
                   </span>
                 ))}
 
@@ -401,11 +510,12 @@ function SimpleScrabble() {
 
               {changeTile &&
                 <div className="ChangeTileType">
-                  <button className="RegularTile" id="color0" onClick={() => setNewTypeType(0)}></button>
-                  <button className="RegularTile" id="color1" onClick={() => setNewTypeType(1)}></button>
-                  <button className="RegularTile" id="color2" onClick={() => setNewTypeType(2)}></button>
-                  <button className="RegularTile" id="color3" onClick={() => setNewTypeType(3)}></button>
-                  <button className="RegularTile" id="color4" onClick={() => setNewTypeType(4)}></button>
+                  <button className="RegularTile" id="color0" onClick={() => setNewTypeType(5)}><p id="changeTileWords">blank</p></button>
+                  <button className="RegularTile" id="color1" onClick={() => setNewTypeType(1)}><p id="changeTileWords">double letter</p></button>
+                  <button className="RegularTile" id="color2" onClick={() => setNewTypeType(2)}><p id="changeTileWords">triple letter</p></button>
+                  <button className="RegularTile" id="color3" onClick={() => setNewTypeType(3)}><p id="changeTileWords">double word</p></button>
+                  <button className="RegularTile" id="color4" onClick={() => setNewTypeType(4)}><p id="changeTileWords">triple word</p></button>
+                  <button className="RegularTile" id="color0" onClick={() => setNewTypeType(0)}><p id="changeTileWords">reset</p></button>
                 </div>
               }
 
@@ -425,7 +535,7 @@ function SimpleScrabble() {
               <button className="ConfirmWord" onClick={() => submitWord()}>another word</button>
 
               <div className="CheckWordRow">
-                <button className="UndoLastWord" onClick={() => undoLastWord()}>undo last</button>
+                <button className="UndoLastWord" onClick={() => undoLastWord()}>undo your last word</button>
                 <button className="WordCheck" onClick={() => wordCheck()}>check word</button>
               </div>
 
@@ -494,11 +604,52 @@ function SimpleScrabble() {
                       </div>
                     ))}
                   </div>
-
+                  
                   <button className="PlayAgain" onClick={() => playAgain()}>play again</button>
                   
+                  <div>
+
+                    <button className="SaveGame" id={"gameSaved"+isGameSaved} onClick={() => saveGame()}>save game</button>
+                    <button className="GetGames" onClick={() => getGames()}>see game history</button>
+                  </div>
+
                 </div>
               }
+            </div>
+          }
+
+          {showGameHistory && 
+            <div className="GameHistory">
+              <h2>your game history together</h2>
+              
+              {gameHistory.length > 0 ?
+                <div className="FoundGameHistory">
+                  {gameHistory.map((game, i) => (
+                    <div className="IndividualGame" key={i}>
+                      <h3>{new Date(game.date).toDateString()}</h3>
+
+                      <div className="IndividualGameInfoContainer">
+                        {game.gameInfo.map((info, k) => (
+                          <div className="IndividualGameInfo" key={k}>
+                            <h2>{info.name}</h2>
+                            <h4>{info.score}</h4>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="IndividualGameBorder" />
+                    </div>
+                  ))}
+                </div>
+
+                :
+
+                <div className="NoGameHistory">
+                  <h3>none found, it's your first game together!</h3>
+                </div>
+              }
+
+              
             </div>
           }
         </div>

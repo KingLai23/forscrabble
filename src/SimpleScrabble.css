@@ -2,11 +2,18 @@
     padding: 20px 0;
 }
 
-.NameScreen {
-    padding-top: 20vh;
+.SimpleScrabble .Title h1 {
+    margin: 0;
+    padding: 20px 0;
+    color: #ffffff;
+    font-size: 30px;
 }
 
-.NameScreen h1 {
+.SimpleScrabble .NameScreen {
+    padding-top: 10vh;
+}
+
+.SimpleScrabble .NameScreen h1 {
     margin: 0;
     font-size: 28px;
     color: #ffffff;
@@ -22,7 +29,7 @@
     font-size: 20px;
     font-weight: bold;
     resize: none;
-    border-radius: 8px;
+    border-radius: 15px;
     border: none;
     border: #dbdbdb solid 2px;
 }
@@ -35,7 +42,7 @@
     outline: none;
     font-size: 20px;
     resize: none;
-    border-radius: 8px;
+    border-radius: 15px;
     font-weight: bold;
     background-color: #9de0ff;
     border: #317594 solid 3px;
@@ -65,7 +72,9 @@
 
 .ScoreTable,
 .PlayerLastTilesSection,
-.FinalScoreSections {
+.FinalScoreSections,
+.PlayerTotalScore,
+.IndividualGameInfoContainer {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
@@ -90,9 +99,10 @@
 }
 
 
-.ScoreTable,
+.ScoreInfo,
 .WordEnter,
-.EndGameSection {
+.EndGameSection,
+.GameHistory {
     color: #ffffff;
     /* background-image: linear-gradient(to bottom right, #491e1e, #663737, #795858); */
     background-color: #ad2727;
@@ -127,8 +137,13 @@
     font-size: 22px;
     font-weight: bold;
     resize: none;
-    border-radius: 5px;
+    border-radius: 15px;
     border: #dbdbdb solid 3px;
+}
+
+#changeTileWords {
+    font-size: 13px;
+    font-style: italic;
 }
 
 #validWord {
@@ -147,6 +162,7 @@
     font-weight: bold;
     margin: 1px;
     display: inline-block;
+    vertical-align: middle;
 }
 
 .RegularTile {
@@ -158,9 +174,11 @@
     margin: 1px;
     display: inline-block;
     cursor: pointer;
+    vertical-align: middle;
 }
 
-#color0 {
+#color0,
+#color5 {
     background-color: #cca774;
     border: #5f4f38 solid 2px;
 }
@@ -177,7 +195,7 @@
 
 #color3 {
     background-color: #cf8570;
-    border: #9e5d4b solid 2px;
+    border: #7c4333 solid 2px;
 }
 
 #color4 {
@@ -206,20 +224,35 @@
 .Bingo,
 .PlayAgain,
 .WordCheck,
-.UndoLastWord {
+.UndoLastWord,
+.GetGames,
+.SaveGame {
     text-align: center;
     padding: 14px 0;
-    margin: 16px 5px 0;
+    margin: 16px 4px 0;
     width: 150px;
     outline: none;
     font-size: 15px;
     resize: none;
-    border-radius: 4px;
+    border-radius: 15px;
     font-weight: bold;
     cursor: pointer;
     border: none;
     background-color: #9de0ff;
     border: #317594 solid 3px;
+}
+
+.ConfirmWord:hover,
+.FinalizeGame:hover,
+.PlayAgain:hover,
+.Bingo:hover,
+.EndTurn:hover,
+.EndGame:hover,
+.WordCheck:hover,
+.UndoLastWord:hover,
+.GetGames:hover,
+.SaveGame:hover {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25) 0 0);
 }
 
 .EndTurn {
@@ -231,7 +264,7 @@
 .ConfirmWord,
 .UndoLastWord,
 .WordCheck {
-    width: 185px;
+    width: 186px;
 }
 
 .WordCheck,
@@ -257,6 +290,19 @@
     margin-top: 40px;
 }
 
+.GetGames,
+.SaveGame {
+    width: 200px;
+    padding: 9px 0;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+#gameSavedtrue {
+    background-color: #9c9c9c;
+    border: #464646 solid 3px;
+}
+
 .EndGame {
     background-color: #ff3838;
     border: #ac2828 solid 3px;
@@ -265,17 +311,6 @@
 .EndTurn {
     background-color: #58e67b;
     border: #307240 solid 3px; 
-}
-
-.ConfirmWord:hover,
-.FinalizeGame:hover,
-.PlayAgain:hover,
-.Bingo:hover,
-.EndTurn:hover,
-.EndGame:hover,
-.WordCheck:hover,
-.UndoLastWord:hover {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.25) 0 0);
 }
 
 .LastTiles p {
@@ -287,16 +322,39 @@
     background-color: #ffffff;
     padding: 6px 20px;
     margin-top: 8px;
-    width: 180px;
+    width: 160px;
     outline: none;
     font-size: 20px;
     font-weight: bold;
     resize: none;
-    border-radius: 5px;
+    border-radius: 10px;
     border: #dbdbdb solid 2px;
 }
 
 #scoreTileColor {
     background-color: #9de0ff;
     border: #317594 solid 3px;
+    cursor: default;
+}
+
+.IndividualGame {
+    padding-bottom: 30px;
+}
+
+.IndividualGame h4,
+.IndividualGame h2,
+.IndividualGame h3 {
+    margin: 5px 0;
+}
+
+.IndividualGame h4 {
+    font-size: 30px;
+}
+
+.IndividualGameBorder {
+    border-bottom: 2px solid #ffffff ;
+    width: 80%;
+    margin: auto;
+    padding-top: 20px;
+    box-shadow: 0 2px 0 #000000;
 }
