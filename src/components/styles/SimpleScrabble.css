@@ -22,7 +22,7 @@
 .InputBar input {
     text-align: center;
     background-color: #ffffff;
-    padding: 10px 0;
+    padding: 8px 0;
     margin-top: 8px;
     width: 280px;
     outline: none;
@@ -36,8 +36,8 @@
 
 .confirmPlayerNames {
     text-align: center;
-    padding: 10px 0;
-    margin-top: 20px;
+    padding: 8px 0;
+    margin-top: 15px;
     width: 280px;
     outline: none;
     font-size: 20px;
@@ -74,7 +74,8 @@
 .PlayerLastTilesSection,
 .FinalScoreSections,
 .PlayerTotalScore,
-.IndividualGameInfoContainer {
+.IndividualGameInfoContainer,
+.IndividualGameInfoScore {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
@@ -98,6 +99,15 @@
     font-size: 20px;
 }
 
+.IndividualGameInfoWordHistory,
+.IndividualGameInfoSubtractedTiles,
+.IndividualGameInfoOtherPlayerTiles {
+    padding-top: 8px;
+}
+
+.IndividualGameInfo h1 {
+    padding: 0;
+}
 
 .ScoreInfo,
 .WordEnter,
@@ -221,6 +231,7 @@
 .EndTurn,
 .EndGame,
 .FinalizeGame,
+.ContinueGame,
 .Bingo,
 .PlayAgain,
 .WordCheck,
@@ -244,6 +255,7 @@
 
 .ConfirmWord:hover,
 .FinalizeGame:hover,
+.ContinueGame:hover,
 .PlayAgain:hover,
 .Bingo:hover,
 .EndTurn:hover,
@@ -279,7 +291,8 @@
     margin-top: 0;
 }
 
-.FinalizeGame {
+.FinalizeGame,
+.ContinueGame {
     width: 180px;
 }
 
@@ -296,6 +309,7 @@
     padding: 9px 0;
     font-size: 16px;
     margin-top: 20px;
+    vertical-align: top;
 }
 
 #gameSavedtrue {
@@ -338,7 +352,7 @@
 }
 
 .IndividualGame {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 .IndividualGame h4,
@@ -351,10 +365,83 @@
     font-size: 30px;
 }
 
+.IndividualGame h3 {
+    padding-top: 15px;
+}
+
 .IndividualGameBorder {
     border-bottom: 2px solid #ffffff ;
     width: 80%;
     margin: auto;
-    padding-top: 20px;
+    padding-top: 10px;
     box-shadow: 0 2px 0 #000000;
 }
+
+/* LOADING ANIMATION */
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 15px;
+}
+
+.lds-ellipsis div {
+    position: absolute;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1f4c61;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(24px, 0);
+    }
+}
+

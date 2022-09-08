@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Scrabble.css';
+import './styles/Scrabble.css';
 
 function ScrabbleLogic() {
     /* PLAYER CHOOSE */

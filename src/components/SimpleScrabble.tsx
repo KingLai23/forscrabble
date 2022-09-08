@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SimpleScrabble.css';
+import './styles/SimpleScrabble.css';
 import { gql, useApolloClient } from '@apollo/client';
 
 function SimpleScrabble() {
@@ -37,6 +37,10 @@ function SimpleScrabble() {
   const [showGameHistory, setShowGameHistory] = useState(false);
   const [gameHistory, setGameHistory] = useState<{players: string[], gameInfo: singlePlayerInfo[], date: string}[]>([]);
 
+  const [isSavingGame, setIsSavingGame] = useState(false);
+  const [isLoadingGameHistory, setIsLoadingGameHistory] = useState(false);
+  const [saveGameText, setSaveGameText] = useState("save this game");
+
   // const validLettersLower = 'abcdefghijklmnopqrstuvwxyz';
   const validLettersUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -47,7 +51,7 @@ function SimpleScrabble() {
   }
 
   const loadScrabbleWords = () => {
-    const scrabbleWords = require("./scrabble_words.txt");
+    const scrabbleWords = require("./scrabble_dictionary/scrabble_words.txt");
 
     fetch(scrabbleWords).then((res) => res.text())
       .then((data) => {
@@ -216,8 +220,15 @@ function SimpleScrabble() {
     }
   }
 
-  const enterRemainingTiles = () => {
+  const finishGame = () => {
+    for (let pi of playerInfo) {
+      if (pi.words.length === 0) return;
+    }
     setEnterTilesLeft(true);
+  }
+
+  const continueGame = () => {
+    setEnterTilesLeft(false);
   }
 
   const configureRemainingTiles = (i: number, s: string) => {
@@ -315,10 +326,11 @@ function SimpleScrabble() {
     setIsGameSaved(false);
     setShowGameHistory(false);
     setGameHistory([]);
+    setSaveGameText("save this game");
   }
 
   const getGames = () => {
-    if (showGameHistory) return;
+    if (showGameHistory || isLoadingGameHistory) return;
 
     let players = [];
     for (let p of playerInfo) players.push(p.name);
@@ -350,6 +362,8 @@ function SimpleScrabble() {
       }
     `;
 
+    setIsLoadingGameHistory(true);
+
     apolloClient
         .query({
             query: GET_SCRABBLE_GAMES_BY_PLAYER,
@@ -358,9 +372,11 @@ function SimpleScrabble() {
         .then((res) => {
             setShowGameHistory(true);
             setGameHistory(res.data.getScrabbleGamesByPlayers);
+            setIsLoadingGameHistory(false);
         })
         .catch((err) => {
           console.log(err);
+          setIsLoadingGameHistory(false);
         });
   }
 
@@ -381,6 +397,8 @@ function SimpleScrabble() {
       }
     `;
 
+    setIsSavingGame(true);
+
     apolloClient
       .mutate({
         mutation: SAVE_SCRABBLE_GAME,
@@ -388,9 +406,12 @@ function SimpleScrabble() {
       })
       .then((res) => {
         setIsGameSaved(true);
+        setIsSavingGame(false);
+        setSaveGameText("game saved");
       })
       .catch((err) => {
         console.log(err);
+        setIsSavingGame(false);
       });
   }
 
@@ -550,7 +571,7 @@ function SimpleScrabble() {
               }
 
               <div className="EndGameRow">
-                <button className="EndGame" onClick={() => enterRemainingTiles()}>finish game</button>
+                <button className="EndGame" onClick={() => finishGame()}>finish game</button>
               </div>
             </div>
 
@@ -583,7 +604,9 @@ function SimpleScrabble() {
                         </div>
                       ))}
                     </div>
-                  <button className="FinalizeGame" onClick={() => finalizeGame()}>Finalize Game</button>
+
+                  <button className="ContinueGame" onClick={() => continueGame()}>continue game</button>
+                  <button className="FinalizeGame" onClick={() => finalizeGame()}>end game</button>
                 </div>
 
                 :
@@ -608,9 +631,21 @@ function SimpleScrabble() {
                   <button className="PlayAgain" onClick={() => playAgain()}>play again</button>
                   
                   <div>
+                    <button className="SaveGame" id={"gameSaved" + isGameSaved} onClick={() => saveGame()}>
+                      {isSavingGame ?
+                        <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        :
+                        <span>{saveGameText}</span>
+                      }
+                    </button>
 
-                    <button className="SaveGame" id={"gameSaved"+isGameSaved} onClick={() => saveGame()}>save game</button>
-                    <button className="GetGames" onClick={() => getGames()}>see game history</button>
+                    <button className="GetGames" onClick={() => getGames()}>
+                      {isLoadingGameHistory ?
+                        <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        :
+                        <span>see your game history</span>
+                      }
+                    </button>
                   </div>
 
                 </div>
@@ -626,18 +661,69 @@ function SimpleScrabble() {
                 <div className="FoundGameHistory">
                   {gameHistory.map((game, i) => (
                     <div className="IndividualGame" key={i}>
+                      <div className="IndividualGameBorder" />
+
                       <h3>{new Date(game.date).toDateString()}</h3>
 
                       <div className="IndividualGameInfoContainer">
                         {game.gameInfo.map((info, k) => (
                           <div className="IndividualGameInfo" key={k}>
                             <h2>{info.name}</h2>
-                            <h4>{info.score}</h4>
+                            <h1>{info.score}</h1>
+
+                            {info.words.map((wordInfo, j) => (
+                              <div className="IndividualGameInfoWordHistory" key={j}>
+                                {wordInfo.word.map((letter, y) => (
+                                  <span className="IndividualTile" key={y}>
+                                    {wordInfo.mult[y] === 5 ?
+                                      <button className="SmallTile" id='color5' />
+                                      :
+                                      <button className="SmallTile" id={'color' + wordInfo.mult[y]}>{letter}</button>
+                                    }
+                                  </span>
+                                ))}
+
+                                <span className="PlayerWordScore">{wordInfo.points}</span>
+
+                                {wordInfo.bingo &&
+                                  <span className="BingoWord"> ★</span>
+                                }
+                              </div>
+                            ))}
+
+                            {info.lostPoints > 0 &&
+                              <div className="IndividualGameInfoSubtractedTiles" key={i}>
+                                {info.lastLetters.map((lastLetter, p) => (
+                                  <span className="LastTiles" key={p}>
+                                    <button className="SmallTile" id="color0">{lastLetter}</button>
+                                  </span>
+                                ))}
+
+                                <span className="PlayerWordScore">-{info.lostPoints}</span>
+                              </div>
+                            }
+
+                            {info.otherPlayerTiles.score > 0 &&
+                              <div className="IndividualGameInfoOtherPlayerTiles" key={'opt' + i}>
+                                {info.otherPlayerTiles.tiles.map((tile, y) => (
+                                  <span className="OtherPlayerTile" key={y}>
+                                    <button className="SmallTile" id='color0'>{tile}</button>
+                                  </span>
+                                ))}
+
+                                <span className="PlayerWordScore">+{info.otherPlayerTiles.score}</span>
+                              </div>
+                            }
                           </div>
                         ))}
+                        
                       </div>
-
-                      <div className="IndividualGameBorder" />
+                      
+                      {/* <div className="IndividualGameInfoScore">
+                        {game.gameInfo.map((info, q) => (
+                          <h4 key={q}>{info.score}</h4>
+                        ))}
+                      </div> */}
                     </div>
                   ))}
                 </div>

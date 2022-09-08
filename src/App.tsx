@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ScrabbleLogic from './SimpleScrabble';
+import ScrabbleLogic from './components/SimpleScrabble';
 
 function App() {
   return (
