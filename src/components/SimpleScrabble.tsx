@@ -9,7 +9,7 @@ function SimpleScrabble() {
 
   const [scrabbleWords, setScrabbleWords] = useState<string[]>([]);
 
-  type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], finalScore: string[], otherPlayerTiles: { tiles: string[], score: number} }
+  type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], otherPlayerTiles: { tiles: string[], score: number} }
   const [playerInfo, setPlayerInfo] = useState<singlePlayerInfo[]>([]);
 
   const [remainingLetters, setRemainingLetters] = useState<{word: string, letters: string[]}[]>([]);
@@ -64,7 +64,7 @@ function SimpleScrabble() {
     let temp2 = [];
     for (let n of enteredNames) {
       if (n.length > 0) {
-        temp.push({ name: n, score: 0, words: [], lostPoints: 0, lastLetters: [], finalScore: [], otherPlayerTiles: { tiles: [], score: 0}});
+        temp.push({ name: n, score: 0, words: [], lostPoints: 0, lastLetters: [], otherPlayerTiles: { tiles: [], score: 0}});
         temp2.push({word: '', letters: []});
       }
     }
@@ -73,6 +73,7 @@ function SimpleScrabble() {
 
     setPlayerInfo(temp);
     setRemainingLetters(temp2);
+    setShowGameHistory(false);
     setNameScreen(false);
     loadScrabbleWords();
   }
@@ -278,16 +279,6 @@ function SimpleScrabble() {
       temp[playerWithNoTilesLeft].otherPlayerTiles = {tiles: allTilesLeft, score: allTilesLeftScore};
       temp[playerWithNoTilesLeft].score+=allTilesLeftScore;
     }
-    
-    for (let i = 0; i < temp.length; i++) {
-      let scoreAsString = '' + temp[i].score;
-      let finalScore = [];
-      for (let s of scoreAsString) {
-        finalScore.push(s);
-      }
-
-      temp[i].finalScore = finalScore;
-    }
 
     setPlayerInfo(temp);
     setShowFinalScore(true);
@@ -329,12 +320,8 @@ function SimpleScrabble() {
     setSaveGameText("save this game");
   }
 
-  const getGames = () => {
-    if (showGameHistory || isLoadingGameHistory) return;
-
-    let players = [];
-    for (let p of playerInfo) players.push(p.name);
-    players.sort();
+  const getGames = (players: string[]) => {
+    if (isLoadingGameHistory) return;
 
     const GET_SCRABBLE_GAMES_BY_PLAYER = gql`
       query getScrabbleGamesByPlayers($players: [String]) {
@@ -355,7 +342,6 @@ function SimpleScrabble() {
               tiles
               score
             }
-            finalScore
           }
           date
         }
@@ -367,7 +353,8 @@ function SimpleScrabble() {
     apolloClient
         .query({
             query: GET_SCRABBLE_GAMES_BY_PLAYER,
-            variables: { players }
+            variables: { players },
+            fetchPolicy: 'network-only'
         })
         .then((res) => {
             setShowGameHistory(true);
@@ -378,6 +365,26 @@ function SimpleScrabble() {
           console.log(err);
           setIsLoadingGameHistory(false);
         });
+  }
+
+  const getGameHistoryAfterGame = () => {
+    let players = [];
+    for (let p of playerInfo) players.push(p.name);
+    players.sort();
+
+    getGames(players);
+  }
+
+  const getGameHistoryBeforeGame = () => {
+    let players = [];
+    for (let n of enteredNames) {
+      if (n.length > 0) {
+        players.push(n);
+      }
+    }
+    players.sort();
+
+    if (players.length > 0) getGames(players);
   }
 
   const saveGame = () => {
@@ -440,7 +447,15 @@ function SimpleScrabble() {
             ))}
           </div>
 
-          <button className="confirmPlayerNames" onClick={() => setupAndStartGame()}>Confirm</button>
+          <button className="confirmPlayerNames" onClick={() => setupAndStartGame()}>confirm</button>
+          <br></br>
+          <button className="GetGameHistoryBefore" onClick={() => getGameHistoryBeforeGame()}>
+            {isLoadingGameHistory ?
+              <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+              :
+              <span>see game history</span>
+            }
+          </button>
         </div>
 
         :
@@ -605,8 +620,10 @@ function SimpleScrabble() {
                       ))}
                     </div>
 
-                  <button className="ContinueGame" onClick={() => continueGame()}>continue game</button>
-                  <button className="FinalizeGame" onClick={() => finalizeGame()}>end game</button>
+                  <div className="LastTileSectionButtons">
+                    <button className="ContinueGame" onClick={() => continueGame()}>continue game</button>
+                    <button className="FinalizeGame" onClick={() => finalizeGame()}>end game</button>
+                  </div>
                 </div>
 
                 :
@@ -619,7 +636,7 @@ function SimpleScrabble() {
                       <div className="PlayerIndividualScore" key={i}>
                         <h2>{info.name}</h2>
 
-                        {info.finalScore.map((num, k) => (
+                        {info.score.toString().split('').map((num, k) => (
                           <span className="ScoreTiles" key={k}>
                             <button className="RegularTile" id="scoreTileColor">{num}</button>
                           </span>
@@ -639,11 +656,11 @@ function SimpleScrabble() {
                       }
                     </button>
 
-                    <button className="GetGames" onClick={() => getGames()}>
+                    <button className="GetGameHistoryAfter" onClick={() => getGameHistoryAfterGame()}>
                       {isLoadingGameHistory ?
                         <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                         :
-                        <span>see your game history</span>
+                        <span>see game history</span>
                       }
                     </button>
                   </div>
@@ -652,92 +669,92 @@ function SimpleScrabble() {
               }
             </div>
           }
+        </div>
+      }
 
-          {showGameHistory && 
-            <div className="GameHistory">
-              <h2>your game history together</h2>
-              
-              {gameHistory.length > 0 ?
-                <div className="FoundGameHistory">
-                  {gameHistory.map((game, i) => (
-                    <div className="IndividualGame" key={i}>
-                      <div className="IndividualGameBorder" />
+      {showGameHistory &&
+        <div className="GameHistory">
+          <h2>your game history together</h2>
 
-                      <h3>{new Date(game.date).toDateString()}</h3>
+          {gameHistory.length > 0 ?
+            <div className="FoundGameHistory">
+              {gameHistory.map((game, i) => (
+                <div className="IndividualGame" key={i}>
+                  <div className="IndividualGameBorder" />
 
-                      <div className="IndividualGameInfoContainer">
-                        {game.gameInfo.map((info, k) => (
-                          <div className="IndividualGameInfo" key={k}>
-                            <h2>{info.name}</h2>
-                            <h1>{info.score}</h1>
+                  <h3>{new Date(game.date).toDateString()}</h3>
 
-                            {info.words.map((wordInfo, j) => (
-                              <div className="IndividualGameInfoWordHistory" key={j}>
-                                {wordInfo.word.map((letter, y) => (
-                                  <span className="IndividualTile" key={y}>
-                                    {wordInfo.mult[y] === 5 ?
-                                      <button className="SmallTile" id='color5' />
-                                      :
-                                      <button className="SmallTile" id={'color' + wordInfo.mult[y]}>{letter}</button>
-                                    }
-                                  </span>
-                                ))}
+                  <div className="IndividualGameInfoContainer">
+                    {game.gameInfo.map((info, k) => (
+                      <div className="IndividualGameInfo" key={k}>
+                        <h2>{info.name}</h2>
+                        <h1>{info.score}</h1>
 
-                                <span className="PlayerWordScore">{wordInfo.points}</span>
-
-                                {wordInfo.bingo &&
-                                  <span className="BingoWord"> ★</span>
+                        {info.words.map((wordInfo, j) => (
+                          <div className="IndividualGameInfoWordHistory" key={j}>
+                            {wordInfo.word.map((letter, y) => (
+                              <span className="IndividualTile" key={y}>
+                                {wordInfo.mult[y] === 5 ?
+                                  <button className="SmallTile" id='color5' />
+                                  :
+                                  <button className="SmallTile" id={'color' + wordInfo.mult[y]}>{letter}</button>
                                 }
-                              </div>
+                              </span>
                             ))}
 
-                            {info.lostPoints > 0 &&
-                              <div className="IndividualGameInfoSubtractedTiles" key={i}>
-                                {info.lastLetters.map((lastLetter, p) => (
-                                  <span className="LastTiles" key={p}>
-                                    <button className="SmallTile" id="color0">{lastLetter}</button>
-                                  </span>
-                                ))}
+                            <span className="PlayerWordScore">{wordInfo.points}</span>
 
-                                <span className="PlayerWordScore">-{info.lostPoints}</span>
-                              </div>
-                            }
-
-                            {info.otherPlayerTiles.score > 0 &&
-                              <div className="IndividualGameInfoOtherPlayerTiles" key={'opt' + i}>
-                                {info.otherPlayerTiles.tiles.map((tile, y) => (
-                                  <span className="OtherPlayerTile" key={y}>
-                                    <button className="SmallTile" id='color0'>{tile}</button>
-                                  </span>
-                                ))}
-
-                                <span className="PlayerWordScore">+{info.otherPlayerTiles.score}</span>
-                              </div>
+                            {wordInfo.bingo &&
+                              <span className="BingoWord"> ★</span>
                             }
                           </div>
                         ))}
-                        
+
+                        {info.lostPoints > 0 &&
+                          <div className="IndividualGameInfoSubtractedTiles" key={i}>
+                            {info.lastLetters.map((lastLetter, p) => (
+                              <span className="LastTiles" key={p}>
+                                <button className="SmallTile" id="color0">{lastLetter}</button>
+                              </span>
+                            ))}
+
+                            <span className="PlayerWordScore">-{info.lostPoints}</span>
+                          </div>
+                        }
+
+                        {info.otherPlayerTiles.score > 0 &&
+                          <div className="IndividualGameInfoOtherPlayerTiles" key={'opt' + i}>
+                            {info.otherPlayerTiles.tiles.map((tile, y) => (
+                              <span className="OtherPlayerTile" key={y}>
+                                <button className="SmallTile" id='color0'>{tile}</button>
+                              </span>
+                            ))}
+
+                            <span className="PlayerWordScore">+{info.otherPlayerTiles.score}</span>
+                          </div>
+                        }
                       </div>
-                      
-                      {/* <div className="IndividualGameInfoScore">
+                    ))}
+
+                  </div>
+
+                  {/* <div className="IndividualGameInfoScore">
                         {game.gameInfo.map((info, q) => (
                           <h4 key={q}>{info.score}</h4>
                         ))}
                       </div> */}
-                    </div>
-                  ))}
                 </div>
+              ))}
+            </div>
 
-                :
+            :
 
-                <div className="NoGameHistory">
-                  <h3>none found, it's your first game together!</h3>
-                </div>
-              }
-
-              
+            <div className="NoGameHistory">
+              <h3>none found, it's your first game together!</h3>
             </div>
           }
+
+
         </div>
       }
     </div>
