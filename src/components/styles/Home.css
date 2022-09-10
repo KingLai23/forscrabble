@@ -1,0 +1,68 @@
+.HomePage .NameScreen {
+    padding-top: 6vh;
+}
+
+.HomePage .NameScreen h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #ffffff;
+}
+
+.HomePage .NameScreen .InputBars .InputBar input {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 280px;
+    outline: none;
+    font-size: 20px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 50px;
+    border: none;
+    border: #dbdbdb solid 2px;
+}
+
+.confirmPlayerNames,
+.GetGameHistoryBefore {
+    text-align: center;
+    padding: 14px 0;
+    margin: 16px 4px 0;
+    width: 150px;
+    outline: none;
+    font-size: 15px;
+    resize: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #9de0ff;
+    border: #317594 solid 2px;
+}
+
+.confirmPlayerNames:hover,
+.GetGameHistoryBefore:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+}
+
+.confirmPlayerNames {
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 280px;
+    outline: none;
+    font-size: 20px;
+}
+
+.GetGameHistoryBefore {
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 280px;
+    outline: none;
+    font-size: 20px;
+}
+
+.GetGameHistoryBefore {
+    background-color: #ff826c;
+    border: #b84642 solid 2px;
+    margin-top: 30px;
+}

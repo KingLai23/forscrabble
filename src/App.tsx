@@ -1,12 +1,15 @@
-import React from 'react';
 import './App.css';
-import ScrabbleLogic from './components/SimpleScrabble';
+import Home from './components/Home';
 
 function App() {
   return (
     <div className="App">
-      <div className="ScrabbleGame">
-        <ScrabbleLogic />
+      <div className="Title">
+        <h1>scrabble calc</h1>
+      </div>
+
+      <div className="Home">
+        <Home />
       </div>
     </div>
   );

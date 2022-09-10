@@ -1,0 +1,272 @@
+.StatsFinder {
+    color: #ffffff;
+    margin-top: 80px;
+    padding-bottom: 50px;
+}
+
+.StatsFinder h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 26px;
+}
+
+.StatsFinder h2 {
+    font-size: 20px;
+}
+
+.StatOption {
+    text-align: center;
+    padding: 12px 0;
+    margin: 16px 4px 0;
+    width: 180px;
+    outline: none;
+    font-size: 15px;
+    resize: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #cacaca;
+    border: #757575 solid 2px;
+}
+
+.StatOption:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+}
+
+#isSelectedtrue {
+    background-color: #9de0ff;
+    border: #317594 solid 2px;
+}
+
+#statInstruction {
+    padding-top: 20px;
+}
+
+#statInstruction p {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.StatsPlayerNameInput input {
+    text-align: center;
+    color: #ffffff;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #ffffff;
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 240px;
+    outline: none;
+    font-size: 26px;
+    font-weight: bold;
+    resize: none;
+}
+
+.StatOptionSearch {
+    text-align: center;
+    padding: 12px 0;
+    margin-left: 20px;
+    width: 100px;
+    outline: none;
+    font-size: 18px;
+    resize: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: #58e67b;
+    border: #307240 solid 2px;
+}
+
+.StatOptionSearch:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+}
+
+.PlayerHighscores,
+.PlayerWordHighscores {
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    border-radius: 20px;
+    margin-top: 25px;
+    padding: 30px 0;
+    background-color: #ad2727;
+    border: #501919 solid 3px;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.HighscoreTableTitles,
+.IndividualPlayerHighscore {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+}
+
+.IndividualPlayerHighscoreBorder {
+    border-bottom: 2px solid #ffffff;
+    width: 85%;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 0 #000000;
+}
+
+.HighscoreTableTitles {
+    padding-bottom: 20px;
+}
+
+.HighscoreTableTitles h2 {
+    font-size: 22px;
+    padding: 0;
+    margin: 0;
+}
+
+.IndividualPlayerHighscore p {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.HighscoreTiles button {
+    height: 50px;
+    width: 50px;
+    margin: 1.5px;
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 10px;
+    background-color: #cca774;
+    border: #66543b solid 2px;
+}
+
+.WordHighscoreTitle {
+    padding-bottom: 20px;
+}
+
+.WordHighscoreTitle h2 {
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
+}
+
+.IndividualPlayerWordHighscore {
+    padding: 10px 0;
+}
+
+.WordHSTile {
+    height: 50px;
+    width: 50px;
+    margin: 1.5px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 12px;
+    border: #ffffff solid 3px; 
+    vertical-align: middle;
+}
+
+#color0,
+#color5 {
+    background-color: #cca774;
+    border-color: #66543b;
+}
+
+#color1 {
+    background-color: #81b0e6;
+    border-color: #3c6594;
+}
+
+#color2 {
+    background-color: #117197;
+    border-color: #0c445a;
+}
+
+#color3 {
+    background-color: #cf8570;
+    border-color: #7c4333;
+}
+
+#color4 {
+    background-color: #be3922;
+    border-color: #83211d;
+}
+
+.PlayerWordHS {
+    padding-left: 20px;
+    font-size: 22px;
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+.NoRecordsFound p {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* loading symbol */
+.lds-ellipsis-stats {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-ellipsis-stats div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis-stats div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis-stats div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis-stats div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis-stats div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis-stats1 {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lds-ellipsis-stats3 {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes lds-ellipsis-stats2 {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(24px, 0);
+    }
+}

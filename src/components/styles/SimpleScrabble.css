@@ -2,41 +2,7 @@
     padding: 20px 0;
 }
 
-.SimpleScrabble .Title h1 {
-    margin: 0;
-    padding: 20px 0;
-    color: #ffffff;
-    font-size: 30px;
-}
-
-.SimpleScrabble .NameScreen {
-    padding-top: 6vh;
-}
-
-.SimpleScrabble .NameScreen h1 {
-    margin: 0;
-    font-size: 26px;
-    color: #ffffff;
-}
-
-.InputBar input {
-    text-align: center;
-    background-color: #ffffff;
-    padding: 8px 0;
-    margin-top: 8px;
-    width: 280px;
-    outline: none;
-    font-size: 20px;
-    font-weight: bold;
-    resize: none;
-    border-radius: 50px;
-    border: none;
-    border: #dbdbdb solid 2px;
-}
-
 /* BUTTONS */
-.confirmPlayerNames,
-.GetGameHistoryBefore,
 .ConfirmWord,
 .EndTurn,
 .EndGame,
@@ -63,8 +29,6 @@
     border: #317594 solid 2px;
 }
 
-.confirmPlayerNames:hover,
-.GetGameHistoryBefore:hover,
 .ConfirmWord:hover,
 .FinalizeGame:hover,
 .ContinueGame:hover,
@@ -77,21 +41,6 @@
 .GetGameHistoryAfter:hover,
 .SaveGame:hover {
     background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
-}
-
-.confirmPlayerNames,
-.GetGameHistoryBefore {
-    padding: 8px 0;
-    margin-top: 8px;
-    width: 280px;
-    outline: none;
-    font-size: 20px;
-}
-
-.GetGameHistoryBefore {
-    background-color: #ff826c;
-    border: #b84642 solid 2px;
-    margin-top: 30px;
 }
 
 .EndTurn {
@@ -258,7 +207,7 @@
     font-weight: bold;
     resize: none;
     border-radius: 50px;
-    border: #dbdbdb solid 3px;
+    border: #dbdbdb solid 2px;
 }
 
 #changeTileWords {
@@ -274,53 +223,57 @@
     color: #ff4242;
 }
 
+.SmallTile,
+.RegularTile {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .SmallTile {
     height: 40px;
     width: 40px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
     margin: 1px;
-    display: inline-block;
-    vertical-align: middle;
+    font-size: 18px;
+    border-radius: 8px;
+    border: #ffffff solid 2px; 
 }
 
 .RegularTile {
     height: 60px;
     width: 60px;
-    text-align: center;
+    margin: 1.5px;
     font-size: 25px;
-    font-weight: bold;
-    margin: 1px;
-    display: inline-block;
     cursor: pointer;
-    vertical-align: middle;
+    border-radius: 12px;
+    border: #ffffff solid 3px; 
 }
 
 #color0,
 #color5 {
     background-color: #cca774;
-    border: #5f4f38 solid 2px;
+    border-color: #66543b;
 }
 
 #color1 {
     background-color: #81b0e6;
-    border: #3c6594 solid 2px;
+    border-color: #3c6594;
 }
 
 #color2 {
     background-color: #117197;
-    border: #0c445a solid 2px;
+    border-color: #0c445a;
 }
 
 #color3 {
     background-color: #cf8570;
-    border: #7c4333 solid 2px;
+    border-color: #7c4333;
 }
 
 #color4 {
     background-color: #be3922;
-    border: #83211d solid 2px;
+    border-color: #83211d;
 }
 
 #scoreTileColor {

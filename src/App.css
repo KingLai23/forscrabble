@@ -3,3 +3,17 @@
   background-color: #000000;
   min-height: 100vh;
 }
+
+.App .Title {
+  padding-top: 30px;
+}
+
+.App .Title h1 {
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-size: 30px;
+}
+
+
+
