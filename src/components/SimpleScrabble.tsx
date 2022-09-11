@@ -105,7 +105,19 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
 
   const setNewTypeType = (k: number) => {
     let temp = [...enteredTiles];
-    temp[currentSelectedTile].mult = k;
+    if (k === 5) {
+      temp[currentSelectedTile].letter = '_';
+    } else {
+      temp[currentSelectedTile].mult = k;
+    }
+    setEnteredTiles(temp);
+    setChangeTile(false);
+  }
+
+  const resetTileType = () => {
+    let temp = [...enteredTiles];
+    temp[currentSelectedTile].letter = enteredWord.charAt(currentSelectedTile);
+    temp[currentSelectedTile].mult = 0;
     setEnteredTiles(temp);
     setChangeTile(false);
   }
@@ -167,8 +179,6 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
         value*=(tile.mult + 1);
       } else if (tile.mult === 3 || tile.mult === 4) {
         wordMult *=(tile.mult - 1);
-      } else if (tile.mult === 5) {
-        value = 0;
       }
 
       beforeWordMult += value;
@@ -423,8 +433,8 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                       <div className="PlayerWordHistory" key={k}>
                         {wordInfo.word.map((letter, j) => (
                           <span className="IndividualTile" key={j}>
-                            {wordInfo.mult[j] === 5 ?
-                              <button className="SmallTile" id='color5' />
+                            {wordInfo.word[j] === '_' ?
+                              <button className="SmallTile" id={'color' + wordInfo.mult[j]} />
                               :
                               <button className="SmallTile" id={'color' + wordInfo.mult[j]}>{letter}</button>
                             }
@@ -483,8 +493,8 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                 <div className="EnteredTiles">
                   {enteredTiles.map((tile, i) => (
                     <span className="IndividualTile" key={i}>
-                      {tile.mult === 5 ?
-                        <button className="RegularTile" id='color5' onClick={() => changeTileType(i)} />
+                      {tile.letter === '_' ?
+                        <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)} />
                         :
                         <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)}>{tile.letter}</button>
                       }
@@ -503,7 +513,7 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                     <button className="RegularTile" id="color2" onClick={() => setNewTypeType(2)}><p id="changeTileWords">triple letter</p></button>
                     <button className="RegularTile" id="color3" onClick={() => setNewTypeType(3)}><p id="changeTileWords">double word</p></button>
                     <button className="RegularTile" id="color4" onClick={() => setNewTypeType(4)}><p id="changeTileWords">triple word</p></button>
-                    <button className="RegularTile" id="color0" onClick={() => setNewTypeType(0)}><p id="changeTileWords">reset</p></button>
+                    <button className="RegularTile" id="color0" onClick={() => resetTileType()}><p id="changeTileWords">reset</p></button>
                   </div>
                 }
 
@@ -597,7 +607,7 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                       ))}
                     </div>
 
-                    <button className="PlayAgain" onClick={() => playAgain()}>new game</button>
+                    <button className="PlayAgain" onClick={() => playAgain()}>back home</button>
 
                     <div>
                       <button className="SaveGame" id={"gameSaved" + isGameSaved} onClick={() => saveGame()}>
@@ -633,7 +643,7 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                     <div className="IndividualGame" key={i}>
                       <div className="IndividualGameBorder" />
 
-                      <h3>{new Date(game.date).toDateString()}</h3>
+                      <h3>{new Date(game.date).toLocaleString()}</h3>
 
                       <div className="IndividualGameInfoContainer">
                         {game.gameInfo.map((info, k) => (
@@ -645,8 +655,8 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
                               <div className="IndividualGameInfoWordHistory" key={j}>
                                 {wordInfo.word.map((letter, y) => (
                                   <span className="IndividualTile" key={y}>
-                                    {wordInfo.mult[y] === 5 ?
-                                      <button className="SmallTile" id='color5' />
+                                    {wordInfo.word[y] === '_' ?
+                                      <button className="SmallTile" id={'color' + wordInfo.mult[y]} />
                                       :
                                       <button className="SmallTile" id={'color' + wordInfo.mult[y]}>{letter}</button>
                                     }

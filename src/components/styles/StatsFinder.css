@@ -83,17 +83,52 @@
     background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
 }
 
+.PlayerStats {
+    width: 75vw;
+    max-width: 1000px;
+    margin: auto;
+    border-radius: 20px;
+    margin-top: 40px;
+    padding: 30px 0;
+    background-color: #051218;
+    border: rgb(26, 45, 54) solid 3px;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.PlayerGameInfo,
 .PlayerHighscores,
 .PlayerWordHighscores {
     width: 80%;
-    max-width: 800px;
     margin: auto;
-    border-radius: 20px;
-    margin-top: 25px;
+    border-radius: 10px;
+    margin-top: 40px;
     padding: 30px 0;
     background-color: #ad2727;
-    border: #501919 solid 3px;
+    border: #6e1c1c solid 4px;
     text-shadow: 2px 2px 2px #000000;
+}
+.PlayerGameInfo table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+}
+
+.PlayerGameInfo td,
+th {
+    border: none;
+    text-align: center;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.PlayerGameInfo th {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.PlayerGameInfo tr:nth-child(5) {
+    background-color: #6b1b1bb7;
 }
 
 .HighscoreTableTitles,
@@ -105,11 +140,18 @@
 
 .IndividualPlayerHighscoreBorder {
     border-bottom: 2px solid #ffffff;
-    width: 85%;
+    width: 80%;
     margin: auto;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 15px;
+    margin-top: 5px;
     box-shadow: 0 2px 0 #000000;
+}
+
+.HighscoreTitle h1,
+.WordHighscoreTitle h2 {
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
 }
 
 .HighscoreTableTitles {
@@ -117,7 +159,7 @@
 }
 
 .HighscoreTableTitles h2 {
-    font-size: 22px;
+    font-size: 20px;
     padding: 0;
     margin: 0;
 }
@@ -125,6 +167,10 @@
 .IndividualPlayerHighscore p {
     font-size: 18px;
     font-weight: 500;
+}
+
+.IndividualPlayerHighscoreTiles {
+    vertical-align: middle;
 }
 
 .HighscoreTiles button {
@@ -138,14 +184,10 @@
     border: #66543b solid 2px;
 }
 
-.WordHighscoreTitle {
+.WordHighscoreTitle,
+.HighscoreTitle {
     padding-bottom: 20px;
-}
-
-.WordHighscoreTitle h2 {
-    font-size: 24px;
-    padding: 0;
-    margin: 0;
+    
 }
 
 .IndividualPlayerWordHighscore {
@@ -162,10 +204,10 @@
     border-radius: 12px;
     border: #ffffff solid 3px; 
     vertical-align: middle;
+    cursor: default;
 }
 
-#color0,
-#color5 {
+#color0 {
     background-color: #cca774;
     border-color: #66543b;
 }
@@ -187,7 +229,7 @@
 
 #color4 {
     background-color: #be3922;
-    border-color: #83211d;
+    border-color: #5c1513;
 }
 
 .PlayerWordHS {
