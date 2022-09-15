@@ -1,0 +1,83 @@
+@import url('./colorScheme.css');
+
+.ScrabbleWordChecker {
+    color: #ffffff;
+    margin: auto;
+    margin-top: 80px;
+    padding: 0 40px 30px;
+    width: 88vw;
+    max-width: 920px;
+    background-color: var(--sectionSecondary);
+    border: var(--sectionSecondaryBorder) solid 4px;
+    border-radius: 10px;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.ScrabbleWordChecker .Title h1 {
+    padding: 0 0 10px;
+    font-size: 24px;
+}
+
+.ScrabbleWordChecker .WordInput input {
+    text-align: center;
+    color: #ffffff;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #ffffff;
+    padding: 8px 0;
+    margin-top: 8px;
+    width: 260px;
+    outline: none;
+    font-size: 26px;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px #000000;
+    resize: none;
+}
+
+.ScrabbleWordChecker .WordCheckBtn {
+    padding: 12px 0;
+    margin-left: 20px;
+    width: 100px;
+    text-align: center;
+    font-size: 18px;
+    outline: none;
+    resize: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: var(--searchBtnBg);
+    border: var(--searchBtnBorder) solid 2px;
+    background-image: var(--topGloss);
+}
+
+.ScrabbleWordChecker .WordCheckBtn:hover {
+    background-image: var(--lightHover);
+}
+
+.ScrabbleWordChecker .InvalidScrabbleWord h2,
+.ScrabbleWordChecker .ValidScrabbleWord h2{
+    padding: 0;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.ScrabbleWordChecker .InvalidScrabbleWord span,
+.ScrabbleWordChecker .ValidScrabbleWord span {
+    font-weight: bold;
+}
+
+.ScrabbleWordChecker .ValidScrabbleWord p {
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+
+#invalidScrabbleWord {
+    color: #ff4242;
+}
+
+#validScrabbleWord {
+    color: #48f35f;
+}

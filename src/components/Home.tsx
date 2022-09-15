@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './styles/Home.css';
 import ScrabbleLogic from './SimpleScrabble';
 import Stats from './StatsFinder';
+import ScrabbleWordChecker from './ScrabbleWordChecker';
 
 function Home() {
     const [pregame, setPregame] = useState(true);
@@ -81,9 +82,9 @@ function Home() {
 
                     </div>
 
-                    <div className="Stats">
-                        <Stats />
-                    </div>
+                    <ScrabbleWordChecker />
+
+                    <Stats />
                 </div>
 
                 :

@@ -10,8 +10,11 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const [showGame, setShowGame] = useState(false);
 
   const [scrabbleWords, setScrabbleWords] = useState<string[]>([]);
+  const [scrabbleDefinitions, setscrabbleDefinitions] = useState<string[]>([]);
+  const [indexOfWord, setIndexOfWord] = useState(-1);
+  const [showIsValidWord, setShowIsValidWord] = useState(false);
+  const [currentWordToCheck, setCurrentWordToCheck] = useState('');
 
-  
   const [playerInfo, setPlayerInfo] = useState<singlePlayerInfo[]>([]);
 
   const [remainingLetters, setRemainingLetters] = useState<{word: string, letters: string[]}[]>([]);
@@ -29,10 +32,6 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const [enterTilesLeft, setEnterTilesLeft] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
 
-  const [isValidWord, setIsValidWord] = useState(false);
-  const [showIsValidWord, setShowIsValidWord] = useState(false);
-
-
   const [isGameSaved, setIsGameSaved] = useState(false);
   const [showGameHistory, setShowGameHistory] = useState(false);
   const [gameHistory, setGameHistory] = useState<{players: string[], gameInfo: singlePlayerInfo[], date: string}[]>([]);
@@ -45,12 +44,23 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const validLettersUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   const loadScrabbleWords = () => {
-    const scrabbleWords = require("./scrabble_dictionary/scrabble_words.txt");
+    const scrabbleWords = require("./scrabble_dictionary/scrabble_words_with_definitions.txt");
+
+    let temp = [];
+    let words : string[] = [];
+    let definitions : string[] = []; 
 
     fetch(scrabbleWords).then((res) => res.text())
-      .then((data) => {
-        setScrabbleWords(data.split('\r\n'));
-      })
+        .then((data) => {
+            for (let line of data.split('\r\n')) {
+                temp = line.split('\t');
+                words.push(temp[0]);
+                definitions.push(temp[1]);
+            }
+
+            setScrabbleWords(words);
+            setscrabbleDefinitions(definitions);
+        })
   }
 
   const gameSetup = () => {
@@ -313,7 +323,8 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
 
   const wordCheck = () => {
     if (enteredWord.length === 0) return;
-    setIsValidWord(scrabbleWords.indexOf(enteredWord.toUpperCase()) > -1);
+    setCurrentWordToCheck(enteredWord);
+    setIndexOfWord(scrabbleWords.indexOf(enteredWord.toUpperCase()));
     setShowIsValidWord(true);
   }
 
@@ -558,10 +569,17 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
 
                 {showIsValidWord &&
                   <div className="WordValidity">
-                    {isValidWord ?
-                      <h1 id="validWord">good ✓</h1>
+                    {indexOfWord === -1 ?
+                      <div className="InvalidScrabbleWord">
+                        <h2><span id="invalidWord">{currentWordToCheck}</span> is not a valid word -_-</h2>
+                      </div>
+
                       :
-                      <h1 id="invalidWord">nice try ✖</h1>
+
+                      <div className="ValidScrabbleWord">
+                        <h2><span id="validWord">{currentWordToCheck}</span> is a valid word :D</h2>
+                        <p>{scrabbleDefinitions[indexOfWord]}</p>
+                      </div>
                     }
                   </div>
                 }
@@ -717,12 +735,6 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                         ))}
 
                       </div>
-
-                      {/* <div className="IndividualGameInfoScore">
-                        {game.gameInfo.map((info, q) => (
-                          <h4 key={q}>{info.score}</h4>
-                        ))}
-                      </div> */}
                     </div>
                   ))}
                 </div>
