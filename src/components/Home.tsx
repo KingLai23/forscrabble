@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/Home.css';
 import ScrabbleLogic from './SimpleScrabble';
 import Stats from './StatsFinder';
@@ -6,6 +6,22 @@ import Stats from './StatsFinder';
 function Home() {
     const [pregame, setPregame] = useState(true);
     const [enteredNames, setEnteredNames] = useState(['', '', '', '']);
+
+    const [foundExistingGame, setFoundExistingGame] = useState(false);
+    const [useExistingGame, setUseExistingGame] = useState(true);
+
+    const checkForExistingGame = () => {
+        let currentGame = localStorage.getItem('currentGame');
+        if (currentGame) setFoundExistingGame(true);
+    }
+
+    useEffect(() => {
+        checkForExistingGame();
+    }, []);
+
+    const continueExistingGame = () => {
+        setPregame(false);
+    }
 
     const setName = (i: number, n: string) => {
         let temp = [...enteredNames];
@@ -15,12 +31,19 @@ function Home() {
 
     const startGame = () => {
         for (let name of enteredNames) {
-            if (name.length > 0) setPregame(false);
+            if (name.length > 0) {
+                setUseExistingGame(false);
+                localStorage.removeItem('currentGame');
+                setPregame(false);
+            }
         }
     }
 
     const handleNewGame = () => {
         setEnteredNames(['', '', '', '']);
+        setFoundExistingGame(false);
+        setUseExistingGame(true);
+        checkForExistingGame();
         setPregame(true);
     }
 
@@ -29,6 +52,14 @@ function Home() {
             {pregame ?
                 <div className="HomePage">
                     <div className="NameScreen">
+                        {foundExistingGame &&
+                            <div className="FoundExistingGame">
+                                <span>an existing game was found, would you like to continue playing it?</span>
+                                <button className="continueExistingGame" onClick={() => continueExistingGame()}>yes</button>
+                                <p>if you start a new game, it will overwrite the existing game</p>
+                            </div>
+                        }
+
                         <h1>enter names</h1>
 
                         <div className="InputBars">
@@ -47,14 +78,7 @@ function Home() {
                         </div>
 
                         <button className="confirmPlayerNames" onClick={() => startGame()}>start game</button>
-                        {/* <br></br>
-                  <button className="GetGameHistoryBefore" onClick={() => getGameHistoryBeforeGame()}>
-                      {isLoadingGameHistory ?
-                          <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                          :
-                          <span>see game history</span>
-                      }
-                  </button> */}
+
                     </div>
 
                     <div className="Stats">
@@ -65,7 +89,7 @@ function Home() {
                 :
 
                 <div className="ScrabbleGame">
-                    <ScrabbleLogic names = {enteredNames} handleNewGame = {handleNewGame} />
+                    <ScrabbleLogic names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame} />
                 </div>
             }
         </div>

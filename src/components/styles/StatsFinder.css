@@ -1,3 +1,5 @@
+@import './colorScheme.css';
+
 .StatsFinder {
     color: #ffffff;
     margin-top: 80px;
@@ -26,17 +28,20 @@
     font-weight: bold;
     cursor: pointer;
     border: none;
-    background-color: #cacaca;
-    border: #757575 solid 2px;
-}
-
-.StatOption:hover {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+    background-color: var(--darkInputBar);
+    border: var(--darkInputBarBorder) solid 2px;
+    color: #ffffff;
 }
 
 #isSelectedtrue {
-    background-color: #9de0ff;
-    border: #317594 solid 2px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px;
+    color: #000000;
+    background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
+}
+
+.StatOption:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.13) 0 0);
 }
 
 #statInstruction {
@@ -63,50 +68,100 @@
     resize: none;
 }
 
-.StatOptionSearch {
+.StatOptionSearch,
+.GameHistorySearch {
     text-align: center;
-    padding: 12px 0;
-    margin-left: 20px;
-    width: 100px;
-    outline: none;
     font-size: 18px;
+    outline: none;
     resize: none;
     border-radius: 50px;
     font-weight: bold;
     cursor: pointer;
-    border: none;
-    background-color: #58e67b;
-    border: #307240 solid 2px;
+    background-color: var(--searchBtnBg);
+    border: var(--searchBtnBorder) solid 2px;
+    background-image: var(--topGloss);
 }
 
-.StatOptionSearch:hover {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+.StatOptionSearch {
+    padding: 12px 0;
+    margin-left: 20px;
+    width: 100px;
 }
 
-.PlayerStats {
-    width: 75vw;
+.GameHistorySearch {
+    padding: 8px 0;
+    margin: 8px 5px;
+    width: 120px;
+}
+
+.StatOptionSearch:hover,
+.GameHistorySearch:hover {
+    background-image: var(--lightHover);
+}
+
+.PlayerStats,
+.GameHistory {
+    width: 88vw;
     max-width: 1000px;
     margin: auto;
     border-radius: 20px;
     margin-top: 40px;
-    padding: 30px 0;
-    background-color: #051218;
-    border: rgb(26, 45, 54) solid 3px;
+    padding: 40px 0;
+    background-color: var(--sectionSecondary);
+    border: var(--sectionSecondaryBorder) solid 3px;
     text-shadow: 2px 2px 2px #000000;
 }
 
 .PlayerGameInfo,
 .PlayerHighscores,
 .PlayerWordHighscores {
-    width: 80%;
+    width: 85%;
     margin: auto;
     border-radius: 10px;
     margin-top: 40px;
     padding: 30px 0;
-    background-color: #ad2727;
-    border: #6e1c1c solid 4px;
+    background-color: var(--sectionMainBg);
+    border: var(--sectionMainBorder) solid 4px;
     text-shadow: 2px 2px 2px #000000;
 }
+
+.GameHistoryPlayersInput input {
+    text-align: center;
+    padding: 6px 0;
+    margin: 8px 5px;
+    width: 180px;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 50px;
+    border: none;
+    background-color: var(--darkInputBar);
+    border: var(--darkInputBarBorder) solid 2px;
+    color: #ffffff;
+}
+
+.GameHistoryGraph {
+    margin: auto;
+    width: 80%;
+}
+
+#chartContainer .apexcharts-tooltip {
+    color: #ffffff;
+    background-color: var(--sectionSecondary);
+    border: 2px solid rgb(169, 186, 196);
+}
+
+#chartContainer .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+    background:  var(--sectionSecondary);
+    border-bottom: 2px solid rgb(80, 98, 109);
+    font-size: 14px !important;
+}
+
+#chartContainer .apexcharts-tooltip-text {
+    font-size: 16px !important;
+}
+
 .PlayerGameInfo table {
     border-collapse: collapse;
     width: 80%;
@@ -118,13 +173,16 @@ th {
     border: none;
     text-align: center;
     padding: 12px;
-    font-size: 18px;
-    font-weight: 500;
 }
 
 .PlayerGameInfo th {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
+}
+
+.PlayerGameInfo td {
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .PlayerGameInfo tr:nth-child(5) {
@@ -132,26 +190,29 @@ th {
 }
 
 .HighscoreTableTitles,
-.IndividualPlayerHighscore {
+.HighscoreTable {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
 }
 
-.IndividualPlayerHighscoreBorder {
-    border-bottom: 2px solid #ffffff;
-    width: 80%;
-    margin: auto;
-    margin-bottom: 15px;
-    margin-top: 5px;
-    box-shadow: 0 2px 0 #000000;
+.IndividualPlayerHighscoreTiles {
+    padding-bottom: 15px;
 }
 
-.HighscoreTitle h1,
-.WordHighscoreTitle h2 {
-    font-size: 24px;
-    padding: 0;
-    margin: 0;
+.IndividualPlayerHighscoreTiles p,
+.NoGameHighscoresFound p {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.IndividualPlayerHighscoreBorder {
+    border-bottom: 2px solid #ffe6e6;
+    width: 85%;
+    margin: auto;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 0 #000000;
 }
 
 .HighscoreTableTitles {
@@ -164,30 +225,31 @@ th {
     margin: 0;
 }
 
-.IndividualPlayerHighscore p {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.IndividualPlayerHighscoreTiles {
-    vertical-align: middle;
-}
-
-.HighscoreTiles button {
+.HighscoreTiles {
     height: 50px;
     width: 50px;
     margin: 1.5px;
     font-size: 25px;
     font-weight: bold;
     border-radius: 10px;
-    background-color: #cca774;
-    border: #66543b solid 2px;
+    outline: none;
+    border: #ffffff solid 3px; 
+    background-image: var(--tileGloss);
 }
 
 .WordHighscoreTitle,
-.HighscoreTitle {
-    padding-bottom: 20px;
-    
+.HighscoreTitle, 
+.GameHistoryTitle {
+    margin-bottom: 20px;
+}
+
+.WordHighscoreTitle p,
+.HighscoreTitle p,
+.GameHistoryTitle p {
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
 }
 
 .IndividualPlayerWordHighscore {
@@ -205,31 +267,32 @@ th {
     border: #ffffff solid 3px; 
     vertical-align: middle;
     cursor: default;
+    background-image: var(--tileGloss);
 }
 
 #color0 {
-    background-color: #cca774;
-    border-color: #66543b;
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
 }
 
 #color1 {
-    background-color: #81b0e6;
-    border-color: #3c6594;
+    background-color: var(--doubleLetterTile);
+    border-color: var(--doubleLetterTileBorder);
 }
 
 #color2 {
-    background-color: #117197;
-    border-color: #0c445a;
+    background-color: var(--tripleLetterTile);
+    border-color: var(--tripleLetterTileBorder);
 }
 
 #color3 {
-    background-color: #cf8570;
-    border-color: #7c4333;
+    background-color: var(--doubleWordTile);
+    border-color: var(--doubleWordTileBorder);
 }
 
 #color4 {
-    background-color: #be3922;
-    border-color: #5c1513;
+    background-color: var(--tripleWordTile);
+    border-color: var(--tripleWordTileBorder);
 }
 
 .PlayerWordHS {

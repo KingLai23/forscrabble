@@ -1,3 +1,5 @@
+@import "./colorScheme.css";
+
 .SimpleScrabble {
     padding: 20px 0;
 }
@@ -25,8 +27,9 @@
     font-weight: bold;
     cursor: pointer;
     border: none;
-    background-color: #9de0ff;
-    border: #317594 solid 2px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px;
+    background-image: var(--topGloss);
 }
 
 .ConfirmWord:hover,
@@ -40,7 +43,7 @@
 .UndoLastWord:hover,
 .GetGameHistoryAfter:hover,
 .SaveGame:hover {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+    background-image: var(--lightHover);
 }
 
 .EndTurn {
@@ -94,13 +97,13 @@
 }
 
 .EndGame {
-    background-color: #ff3838;
-    border: #ac2828 solid 2px;
+    background-color: var(--warningBtnBg);
+    border: var(--warningBtnBorder) solid 2px;
 }
 
 .EndTurn {
-    background-color: #58e67b;
-    border: #307240 solid 2px;
+    background-color: var(--searchBtnBg);
+    border: var(--searchBtnBorder) solid 2px;
 }
 
 .ScrabbleGame h1 {
@@ -162,22 +165,23 @@
 .ScoreInfo,
 .WordEnter,
 .EndGameSection,
-.GameHistory {
+.GameHistoryAfterGame {
     color: #ffffff;
-    /* background-image: linear-gradient(to bottom right, #491e1e, #663737, #795858); */
-    background-color: #ad2727;
+    text-shadow: 2px 2px 2px #000000;
     margin: auto;
-    width: 70vw;
+    width: 85vw;
+    max-width: 2000px;
     border-radius: 5px;
     margin-top: 16px;
     padding: 30px 0;
-    border: #501919 solid 3px;
-    text-shadow: 2px 2px 2px #000000;
+    background-color: var(--sectionMainBg);
+    border: var(--sectionMainBorder) solid 3px;  
 }
 
 .WordEnter,
 .EndGameSection {
-    background-color: #b48d53;
+    background-color: var(--woodSectionBg);
+    border: var(--woodSectionBorder) solid 3px;
 }
 
 .LastTileSectionButtons {
@@ -195,19 +199,32 @@
     padding-bottom: 10px;
 }
 
-.WordInputBar input {
+.WordInputBar input,
+.LastTilesInput input {
     text-align: center;
-    background-color: #ffffff;
-    padding: 7px 0;
-    margin-top: 8px;
-    margin-right: 8px;
-    width: 252px;
     outline: none;
     font-size: 22px;
     font-weight: bold;
     resize: none;
     border-radius: 50px;
-    border: #dbdbdb solid 2px;
+    background-color: var(--lightInputBar);
+    border: var(--lightInputBarBorder) solid 2px;
+}
+
+.WordInputBar input {
+    padding: 7px 0;
+    margin-top: 8px;
+    margin-right: 8px;
+    width: 252px;
+    font-size: 22px;
+}
+
+.LastTilesInput input {
+    padding: 6px 20px;
+    margin-top: 8px;
+    width: 60%;
+    max-width: 280px;
+    font-size: 20px;
 }
 
 #changeTileWords {
@@ -229,6 +246,7 @@
     font-weight: bold;
     display: inline-block;
     vertical-align: middle;
+    background-image: var(--tileGloss);
 }
 
 .SmallTile {
@@ -251,33 +269,33 @@
 }
 
 #color0 {
-    background-color: #cca774;
-    border-color: #66543b;
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
 }
 
 #color1 {
-    background-color: #81b0e6;
-    border-color: #3c6594;
+    background-color: var(--doubleLetterTile);
+    border-color: var(--doubleLetterTileBorder);
 }
 
 #color2 {
-    background-color: #117197;
-    border-color: #0c445a;
+    background-color: var(--tripleLetterTile);
+    border-color: var(--tripleLetterTileBorder);
 }
 
 #color3 {
-    background-color: #cf8570;
-    border-color: #7c4333;
+    background-color: var(--doubleWordTileBorder);
+    border-color: var(--doubleWordTileBorder);
 }
 
 #color4 {
-    background-color: #be3922;
-    border-color: #83211d;
+    background-color: var(--tripleWordTileBorder);
+    border-color: var(--tripleWordTileBorder);
 }
 
 #scoreTileColor {
-    background-color: #cca774;
-    border: #5f4f38 solid 3px;
+    background-color: var(--regTile);
+    border: var(--regTileBorder) solid 3px;
     font-size: 30px;
     cursor: default;
 }
@@ -294,21 +312,6 @@
 
 .EndGameRow {
     margin-top: 50px;
-}
-
-.LastTilesInput input {
-    text-align: center;
-    background-color: #ffffff;
-    padding: 6px 20px;
-    margin-top: 8px;
-    width: 60%;
-    max-width: 280px;
-    outline: none;
-    font-size: 20px;
-    font-weight: bold;
-    resize: none;
-    border-radius: 50px;
-    border: #dbdbdb solid 2px;
 }
 
 .FinalizeScores h1 {

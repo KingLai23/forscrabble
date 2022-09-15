@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import './styles/StatsFinder.css';
 import { gql, useApolloClient } from '@apollo/client';
+import Chart from "react-apexcharts";
 
 function StatsFinder() {
     const apolloClient = useApolloClient();
@@ -9,15 +9,23 @@ function StatsFinder() {
     const statOptions = ['game history', 'player stats'];
     const [selectedOption, setSelectedOption] = useState(1);
 
-    const [playerHSName, setPlayerHSName] = useState('');
-    const [playerHighscores, setPlayerHighscores] = useState<{ scrabbleGameId: string, score: number }[]>([]);
-    const [showPlayerHighscores, setShowPlayerHighscores] = useState(false);
-    const [loadingPlayerHS, setLoadingPlayerHS] = useState(false);
+    const numGameHSToDisplay = 5;
+    const numWordHSToDisplay = 10;
+    const numGameHistoryToDisplay = 10;
 
-    const [playerWordHSName, setPlayerWordHSName] = useState('');
-    const [playerWordHS, setPlayerWordHS] = useState<{ word: string[], mult: number[], bingo: boolean, points: number }[]>([]);
-    const [showPlayerWordHS, setShowPlayerWordHS] = useState(false);
-    const [loadingPlayerWordHS, setLoadingPlayerWordHS] = useState(false);
+    type gameHistoryType = {
+        players: string[],
+        gamesTogether: {
+            scrabbleGameId: string,
+            date: string,
+            scores: [number]
+        }[]
+    }
+
+    const emptyGameHistory : gameHistoryType = {
+        players: [],
+        gamesTogether: []
+    }
 
     type playerStatsType = {
         name: string,
@@ -43,7 +51,11 @@ function StatsFinder() {
                 averageScore: number
             }
         },
-        gameHighscores: { scrabbleGameId: string, score: number, date: string }[],
+        gameHighscores: {
+            twoPlayer: { scrabbleGameId: string, score: number, date: string }[],
+            threePlayer: { scrabbleGameId: string, score: number, date: string }[],
+            fourPlayer: { scrabbleGameId: string, score: number, date: string }[]
+        },
         wordHighscores: { word: string[], mult: number[], bingo: boolean, points: number }[]
     };
 
@@ -71,14 +83,100 @@ function StatsFinder() {
                 averageScore: 0
             }
         },
-        gameHighscores: [],
+        gameHighscores: {
+            twoPlayer: [],
+            threePlayer: [],
+            fourPlayer: []
+        },
         wordHighscores: []
     };
+
+    const [gameHistoryPlayers, setGameHistoryPlayers] = useState(['', '', '', '']);
+    const [gameHistory, setGameHistory] = useState<gameHistoryType>(emptyGameHistory);
+    const [showGameHistory, setshowGameHistory] = useState(false);
+    const [loadingGameHistory, setLoadingGameHistory] = useState(false);
 
     const [playerStatsName, setPlayerStatsName] = useState('');
     const [playerStats, setPlayerStats] = useState<playerStatsType>(emptyPlayerStats);
     const [showPlayerStats, setShowPlayerStats] = useState(false);
     const [loadingPlayerStats, setLoadingPlayerStats] = useState(false);
+
+    const getClickedGame = (index: number) => {
+        console.log(gameHistory.gamesTogether[index]);
+    }
+
+    const [graphOptions, setGraphOptions] = useState({
+        options: {
+            chart: {
+                id: "game-history",
+                stroke: {
+                    curve: 'smooth'
+                },
+                colors: ["#00d0ff", "#ff1900", "#00ff51", "#e5ff00"],
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: false,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                        customIcons: []
+                    }
+                },
+                events: {
+                    markerClick: function(event: any, chartContext: any, { seriesIndex, dataPointIndex, config}: any) {
+                        getClickedGame(dataPointIndex);
+                    }
+                },
+                theme: {
+                    mode: "dark",
+                },
+            },
+            xaxis: {
+                categories: [''],
+                labels: {
+                    show: true,
+                    style: {
+                        colors: "#ffffff",
+                        fontSize: '14px',
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+            yaxis: {
+                labels: {
+                    show: true,
+                    style: {
+                        colors: "#ffffff",
+                        fontSize: '14px',
+                    }
+                }
+            },
+            legend: {
+                fontSize: '18px',
+                fontWeight: 500,
+                labels: {
+                    colors: "#ffffff",
+                },
+                itemMargin: {
+                    horizontal: 10,
+                    vertical: 5
+                }
+            },
+            markers: {
+                size: 7,
+            },
+            dataLabels: {
+                enabled: false
+            }
+        },
+        series: [{name: '', data: [0]}]
+    });
 
     const selectStatOption = (i: number) => {
         setSelectedOption(i);
@@ -88,100 +186,84 @@ function StatsFinder() {
         return i === selectedOption;
     }
 
-    // const getGameHistoryBeforeGame = () => {
-    //     let players = [];
-    //     for (let n of enteredNames) {
-    //         if (n.length > 0) {
-    //             players.push(n);
-    //         }
-    //     }
-    //     players.sort();
+    const setPlayerHistoryName = (i: number, n: string) => {
+        let temp = [...gameHistoryPlayers];
+        temp[i] = n;
+        setGameHistoryPlayers(temp);
+    }
 
-    //     if (players.length > 0) getGames(players);
-    // }
+    const setGraphInformation = (gameHistoryInfo : gameHistoryType) => {
+        let temp = graphOptions;
 
-    const queryGameHighscores = (player: string) => {
-        const GET_GAME_HIGHSCORES = gql`
-            query getHighscoresOfAPlayer($player: String) {
-                getHighscoresOfAPlayer(player: $player) {
-                    scrabbleGameId
-                    score
+        let xaxis : string[] = [];
+        let series : { name: string, data: number[] }[] = [];
+        let numPlayers = gameHistoryInfo.players.length;
+
+        for (let name of gameHistoryInfo.players) series.push({ name: name, data: [] });
+
+        for (let game of gameHistoryInfo.gamesTogether) {
+            xaxis.unshift(new Date(game.date).toLocaleDateString());
+            for (let i = 0; i < numPlayers; i++) series[i].data.unshift(game.scores[i]);
+        }
+
+        temp.options.xaxis.categories = xaxis;
+        temp.series = series;
+
+        setGraphOptions(temp);
+    }
+
+    const queryGameHistory = (players: string[], numGames: Number) => {
+        const GET_GAME_HISTORY = gql`
+            query getScrabbleGamesWithPlayers($players: [String], $numGames: Int) {
+                getScrabbleGamesWithPlayers(players: $players, numGames: $numGames) {
+                    players
+                    gamesTogether {
+                        scrabbleGameId
+                        date
+                        scores
+                    }
                 }
             }
         `;
 
-        setLoadingPlayerHS(true);
+        setLoadingGameHistory(true);
 
         apolloClient
             .query({
-                query: GET_GAME_HIGHSCORES,
-                variables: { player },
+                query: GET_GAME_HISTORY,
+                variables: { players, numGames },
                 fetchPolicy: 'network-only'
             })
             .then((res) => {
-                setPlayerHighscores(res.data.getHighscoresOfAPlayer);
-                setShowPlayerHighscores(true);
-                setLoadingPlayerHS(false);
+                setGameHistory(res.data.getScrabbleGamesWithPlayers);
+                setGraphInformation(res.data.getScrabbleGamesWithPlayers);
+                setshowGameHistory(true);
+                setLoadingGameHistory(false);
             })
             .catch((err) => {
                 console.log(err);
-                setLoadingPlayerHS(false);
+                setLoadingGameHistory(false);
             });
     }
 
-    const getGameHighScores = () => {
-        if (loadingPlayerHS || playerHSName === '') return;
+    const getGameHistory = () => {
+        let players = [];
 
-        setShowPlayerHighscores(false);
-        setPlayerHighscores([]);
+        for (let p of gameHistoryPlayers) if (p.length > 0) players.push(p);
 
-        queryGameHighscores(playerHSName);
+        if (players.length === 0 || loadingGameHistory) return;
+
+
+        setshowGameHistory(false);
+        setGameHistory(emptyGameHistory);
+
+        queryGameHistory(players, numGameHistoryToDisplay);
     }
 
-    const queryWordHighscores = (player: string) => {
-        const GET_WORD_HIGHSCORES = gql`
-            query getHighestSingleWordScoresOfAPlayer($player: String) {
-                getHighestSingleWordScoresOfAPlayer(player: $player) {
-                    word
-                    mult
-                    bingo
-                    points
-                }
-            }
-        `;
-
-        setLoadingPlayerWordHS(true);
-
-        apolloClient
-            .query({
-                query: GET_WORD_HIGHSCORES,
-                variables: { player },
-                fetchPolicy: 'network-only'
-            })
-            .then((res) => {
-                setPlayerWordHS(res.data.getHighestSingleWordScoresOfAPlayer);
-                setShowPlayerWordHS(true);
-                setLoadingPlayerWordHS(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoadingPlayerWordHS(false);
-            });
-    }
-
-    const getWordHighscores = () => {
-        if (loadingPlayerWordHS || playerWordHSName === '') return;
-
-        setShowPlayerWordHS(false);
-        setPlayerWordHS([]);
-
-        queryWordHighscores(playerWordHSName);
-    }
-
-    const queryPlayerStats = (player: string) => {
+    const queryPlayerStats = (player: string, numGameHS: Number, numWordHS: Number) => {
         const GET_PLAYER_STATS = gql`
-            query getPlayerStats($player: String) {
-                getPlayerStats(player: $player) {
+            query getPlayerStats($player: String, $numGameHS: Int, $numWordHS: Int) {
+                getPlayerStats(player: $player, numGameHS: $numGameHS, numWordHS: $numWordHS) {
                     name
                     gamesInfo {
                         twoPlayer {
@@ -206,9 +288,21 @@ function StatsFinder() {
                         }
                     }
                     gameHighscores {
-                        scrabbleGameId
-                        score
-                        date
+                        twoPlayer {
+                            scrabbleGameId
+                            score
+                            date
+                        }
+                        threePlayer {
+                            scrabbleGameId
+                            score
+                            date
+                        }
+                        fourPlayer {
+                            scrabbleGameId
+                            score
+                            date
+                        }
                     }
                     wordHighscores {
                         word
@@ -225,7 +319,7 @@ function StatsFinder() {
         apolloClient
             .query({
                 query: GET_PLAYER_STATS,
-                variables: { player },
+                variables: { player, numGameHS, numWordHS },
                 fetchPolicy: 'network-only'
             })
             .then((res) => {
@@ -245,7 +339,7 @@ function StatsFinder() {
         setShowPlayerStats(false);
         setPlayerStats(emptyPlayerStats);
 
-        queryPlayerStats(playerStatsName);
+        queryPlayerStats(playerStatsName, numGameHSToDisplay, numWordHSToDisplay);
     }
 
     return (
@@ -262,6 +356,54 @@ function StatsFinder() {
             {isSelected(0) &&
                 <div className="ViewGameHistory">
                     <div id="statInstruction"><p>enter some player names and view all the games they played together</p></div>
+
+                    <div>
+                        {gameHistoryPlayers.map((n: string, i: number) => (
+                            <span className="GameHistoryPlayersInput" key={i}>
+                                <input
+                                    placeholder={"player " + (i + 1)}
+                                    name="playerNameInput"
+                                    id="playerNameInput"
+                                    autoComplete='off'
+                                    value={n}
+                                    onChange={(e) => setPlayerHistoryName(i, e.currentTarget.value)}
+                                    onKeyPress={(event) => {
+                                        if (event.key === 'Enter') {
+                                            event.preventDefault()
+                                            getGameHistory();
+                                        }
+                                    }}
+                                />
+                            </span>
+                        ))}
+                        <button className="GameHistorySearch" onClick={() => getGameHistory()}>find</button>
+                    </div>
+
+                    {loadingGameHistory &&
+                        <div className="lds-ellipsis-stats"><div></div><div></div><div></div><div></div></div>
+                    }
+
+                    {showGameHistory &&
+                        <div className="GameHistory">
+                            {gameHistory.gamesTogether.length > 0 ?
+                                <div>
+                                    <div className="GameHistoryTitle">
+                                        <p>your last {numGameHistoryToDisplay} games together</p>
+                                    </div>
+
+                                    <div className="GameHistoryGraph" id="chartContainer">
+                                        <Chart options={graphOptions.options} series={graphOptions.series} type="area" height={400}/>
+                                    </div>
+                                </div>
+                                
+                                :
+                                
+                                <div className="NoRecordsFound">
+                                    <p>you guys haven't played a game together yet :(</p>
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
             }
 
@@ -294,7 +436,7 @@ function StatsFinder() {
 
                     {showPlayerStats &&
                         <div className="PlayerStats">
-                            {playerStats.gameHighscores.length > 0 ?
+                            {playerStats.wordHighscores.length > 0 ?
                                 <div>
                                     <div className="PlayerStatsTitle">
                                         <h1>viewing {playerStats.name}'s stats</h1>
@@ -303,72 +445,126 @@ function StatsFinder() {
                                     <div className="PlayerGameInfo">
                                         <table>
                                             <tr>
-                                                <th>game mode</th>
-                                                <th>games played</th>
-                                                <th>wins</th>
-                                                <th>average score</th>
+                                                <td>game mode</td>
+                                                <td>games played</td>
+                                                <td>wins</td>
+                                                <td>average score</td>
                                             </tr>
                                             <tr>
                                                 <td>2 players</td>
-                                                <td>{playerStats.gamesInfo.twoPlayer.gamesPlayed}</td>
-                                                <td>{playerStats.gamesInfo.twoPlayer.gamesWon}</td>
-                                                <td>{playerStats.gamesInfo.twoPlayer.averageScore}</td>
+                                                <th>{playerStats.gamesInfo.twoPlayer.gamesPlayed}</th>
+                                                <th>{playerStats.gamesInfo.twoPlayer.gamesWon}</th>
+                                                <th>{playerStats.gamesInfo.twoPlayer.averageScore}</th>
                                             </tr>
                                             <tr>
                                                 <td>3 players</td>
-                                                <td>{playerStats.gamesInfo.threePlayer.gamesPlayed}</td>
-                                                <td>{playerStats.gamesInfo.threePlayer.gamesWon}</td>
-                                                <td>{playerStats.gamesInfo.threePlayer.averageScore}</td>
+                                                <th>{playerStats.gamesInfo.threePlayer.gamesPlayed}</th>
+                                                <th>{playerStats.gamesInfo.threePlayer.gamesWon}</th>
+                                                <th>{playerStats.gamesInfo.threePlayer.averageScore}</th>
                                             </tr>
                                             <tr>
                                                 <td>4 players</td>
-                                                <td>{playerStats.gamesInfo.fourPlayer.gamesPlayed}</td>
-                                                <td>{playerStats.gamesInfo.fourPlayer.gamesWon}</td>
-                                                <td>{playerStats.gamesInfo.fourPlayer.averageScore}</td>
+                                                <th>{playerStats.gamesInfo.fourPlayer.gamesPlayed}</th>
+                                                <th>{playerStats.gamesInfo.fourPlayer.gamesWon}</th>
+                                                <th>{playerStats.gamesInfo.fourPlayer.averageScore}</th>
                                             </tr>
                                             <tr>
                                                 <td>total</td>
-                                                <td>{playerStats.gamesInfo.total.gamesPlayed}</td>
-                                                <td>{playerStats.gamesInfo.total.gamesWon}</td>
-                                                <td>{playerStats.gamesInfo.total.averageScore}</td>
+                                                <th>{playerStats.gamesInfo.total.gamesPlayed}</th>
+                                                <th>{playerStats.gamesInfo.total.gamesWon}</th>
+                                                <th>{playerStats.gamesInfo.total.averageScore}</th>
                                             </tr>
                                         </table>
                                     </div>
 
                                     <div className="PlayerHighscores">
                                         <div className="HighscoreTitle">
-                                            <h1>your top 10 games</h1>
+                                            <p>your top {numGameHSToDisplay} games</p>
                                         </div>
 
                                         <div className="HighscoreTableTitles">
                                             {/* <div><h2>scrabble game id</h2></div> */}
-                                            <div><h2>date</h2></div>
-                                            <div><h2>game score</h2></div>
+                                            <div><h2>2 player</h2></div>
+                                            <div><h2>3 player</h2></div>
+                                            <div><h2>4 player</h2></div>
                                         </div>
 
-                                        <div>
-                                            {playerStats.gameHighscores.map((highscore, i) => (
-                                                <div key={i}>
-                                                    <div className="IndividualPlayerHighscoreBorder" />
-                                                    <div className="IndividualPlayerHighscore">
-                                                        {/* <div><p>{highscore.scrabbleGameId}</p></div> */}
-                                                        <div><p>{new Date(highscore.date).toLocaleString()}</p></div>
-                                                        <div className="IndividualPlayerHighscoreTiles">
-                                                            {highscore.score.toString().split('').map((num, k) => (
-                                                                <span className="HighscoreTiles" key={k}>
-                                                                    <button>{num}</button>
-                                                                </span>
-                                                            ))}
-                                                        </div>
+                                        <div className="HighscoreTable">
+                                            <div className="TwoPlayerHighscores">
+                                                {playerStats.gameHighscores.twoPlayer.length > 0 ?
+                                                    <div>
+                                                        {playerStats.gameHighscores.twoPlayer.map((gameScore, i) => (
+                                                            <div className="IndividualPlayerHighscoreTiles" key={i}>
+                                                                <div className="IndividualPlayerHighscoreBorder" />
+                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                {gameScore.score.toString().split('').map((num, k) => (
+                                                                    <span key={k}>
+                                                                        <button className="HighscoreTiles" id='color0'>{num}</button>
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        ))}
                                                     </div>
-                                                </div>
-                                            ))}
+                                                    :
+                                                    <div className="NoGameHighscoresFound">
+                                                        <div className="IndividualPlayerHighscoreBorder" />
+                                                        <p>no stats found</p>
+                                                    </div>
+                                                }
+
+                                            </div>
+
+                                            <div className="ThreePlayerHighscores">
+                                                {playerStats.gameHighscores.threePlayer.length > 0 ?
+                                                    <div>
+                                                        {playerStats.gameHighscores.threePlayer.map((gameScore, i) => (
+                                                            <div className="IndividualPlayerHighscoreTiles" key={i}>
+                                                                <div className="IndividualPlayerHighscoreBorder" />
+                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                {gameScore.score.toString().split('').map((num, k) => (
+                                                                    <span key={k}>
+                                                                        <button className="HighscoreTiles" id='color0'>{num}</button>
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    :
+                                                    <div className="NoGameHighscoresFound">
+                                                        <div className="IndividualPlayerHighscoreBorder" />
+                                                        <p>no stats found</p>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div className="FourPlayerHighscores">
+                                                {playerStats.gameHighscores.fourPlayer.length > 0 ?
+                                                    <div>
+                                                        {playerStats.gameHighscores.fourPlayer.map((gameScore, i) => (
+                                                            <div className="IndividualPlayerHighscoreTiles" key={i}>
+                                                                <div className="IndividualPlayerHighscoreBorder" />
+                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                {gameScore.score.toString().split('').map((num, k) => (
+                                                                    <span key={k}>
+                                                                        <button className="HighscoreTiles" id='color0'>{num}</button>
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    :
+                                                    <div className="NoGameHighscoresFound">
+                                                        <div className="IndividualPlayerHighscoreBorder" />
+                                                        <p>no stats found</p>
+                                                    </div>
+                                                }
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="PlayerWordHighscores">
                                         <div className="WordHighscoreTitle">
-                                            <h2>your top 10 words</h2>
+                                            <p>your top {numWordHSToDisplay} words</p>
                                         </div>
 
                                         <div>
@@ -408,134 +604,8 @@ function StatsFinder() {
                     }
                 </div>
             }
-
-            {isSelected(-1) &&
-                <div className="ViewGameHighscores">
-                    <div id="statInstruction"><p>enter a player name and view their top 10 game scores</p></div>
-
-                    <div className="StatsPlayerNameInput">
-                        <input
-                            placeholder={"player"}
-                            name="playerNameInput"
-                            id="playerNameInput"
-                            autoComplete='off'
-                            value={playerHSName}
-                            onChange={(e) => setPlayerHSName(e.currentTarget.value)}
-                        />
-
-                        <button className="StatOptionSearch" onClick={() => getGameHighScores()}>find</button>
-                    </div>
-
-                    { loadingPlayerHS &&
-                        <div className="lds-ellipsis-stats"><div></div><div></div><div></div><div></div></div>
-                    }
-
-                    { showPlayerHighscores &&
-                        <div className="PlayerHighscores">
-                            <div className="HighscoreTableTitles">
-                                <div><h2>scrabble game id</h2></div>
-                                <div><h2>game score</h2></div>
-                            </div>
-
-                            {playerHighscores.length > 0 ?
-                                <div>
-                                    {playerHighscores.map((highscore, i) => (
-                                        <div key={i}>
-                                            <div className="IndividualPlayerHighscoreBorder" />
-                                            <div className="IndividualPlayerHighscore">
-                                                <div><p>{highscore.scrabbleGameId}</p></div>
-
-                                                <div>
-                                                    {highscore.score.toString().split('').map((num, k) => (
-                                                        <span className="HighscoreTiles" key={k}>
-                                                            <button>{num}</button>
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                :
-
-                                <div className="NoRecordsFound">
-                                    <p>no games found :(</p>
-                                </div>
-                            }
-                            
-                        </div>
-                    }
-                </div>
-            }
-
-            {isSelected(-1) &&
-                <div className="ViewWordHighscores">
-                    <div id="statInstruction"><p>enter a player name and view their top 10 word scores</p></div>
-
-                    <div className="StatsPlayerNameInput">
-                        <input
-                            placeholder={"player"}
-                            name="playerNameInput"
-                            id="playerNameInput"
-                            autoComplete='off'
-                            value={playerWordHSName}
-                            onChange={(e) => setPlayerWordHSName(e.currentTarget.value)}
-                        />
-
-                        <button className="StatOptionSearch" onClick={() => getWordHighscores()}>find</button>
-                    </div>
-
-                    { loadingPlayerWordHS &&
-                        <div className="lds-ellipsis-stats"><div></div><div></div><div></div><div></div></div>
-                    }
-
-                    { showPlayerWordHS &&
-                        <div className="PlayerWordHighscores">
-                            <div className="WordHighscoreTitle">
-                                <h2>your best words</h2>
-                            </div>
-
-                            {playerWordHS.length > 0 ?
-                                <div>
-                                    {playerWordHS.map((highscore, i) => (
-                                        <div key={i}>
-                                            <div className="IndividualPlayerWordHighscore">
-                                                {highscore.word.map((letter, y) => (
-                                                    <span key={y}>
-                                                        {highscore.word[y] === '_' ?
-                                                            <button className="WordHSTile" id={'color' + highscore.mult[y]} />
-                                                            :
-                                                            <button className="WordHSTile" id={'color' + highscore.mult[y]}>{letter}</button>
-                                                        }
-                                                    </span>
-                                                ))}
-
-                                                <span className="PlayerWordHS">{highscore.points}</span>
-
-                                                {highscore.bingo &&
-                                                    <span className="BingoWord"> ★</span>
-                                                }
-                                            </div>
-                                        </div>
-
-                                    ))}
-                                </div>
-
-                                :
-
-                                <div className="NoRecordsFound">
-                                    <p>no words found :(</p>
-                                </div>
-                            }
-                            
-                        </div>
-                    }
-                </div>
-            }
         </div>
     );
 }
 
 export default StatsFinder;
-

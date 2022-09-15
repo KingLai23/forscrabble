@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './styles/SimpleScrabble.css';
 import { gql, useApolloClient } from '@apollo/client';
 
-function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
+type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], otherPlayerTiles: { tiles: string[], score: number} }
+
+function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNewGame: () => void}) {
   const apolloClient = useApolloClient();
 
   const [showGame, setShowGame] = useState(false);
 
   const [scrabbleWords, setScrabbleWords] = useState<string[]>([]);
 
-  type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], otherPlayerTiles: { tiles: string[], score: number} }
+  
   const [playerInfo, setPlayerInfo] = useState<singlePlayerInfo[]>([]);
 
   const [remainingLetters, setRemainingLetters] = useState<{word: string, letters: string[]}[]>([]);
@@ -54,11 +56,26 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
   const gameSetup = () => {
     let temp = [];
     let temp2 = [];
-    for (let n of props.names) {
+
+    if (props.continueGame) {
+      let currentGameInfoString = localStorage.getItem('currentGame');
+      
+      if (currentGameInfoString) {
+        let currentGameInfo = JSON.parse(currentGameInfoString);
+        temp = currentGameInfo.info;
+        for (let i = 0; i < temp.length; i++) temp2.push({ word: '', letters: [] });
+        setPlayerTurn(currentGameInfo.currentTurn);
+        console.log(currentGameInfo.currentTurn);
+      } else {
+        props.handleNewGame();
+      }
+    } else {
+      for (let n of props.names) {
         if (n.length > 0) {
           temp.push({ name: n, score: 0, words: [], lostPoints: 0, lastLetters: [], otherPlayerTiles: { tiles: [], score: 0 } });
           temp2.push({ word: '', letters: [] });
         }
+      }
     }
 
     loadScrabbleWords();
@@ -222,11 +239,11 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
   const endTurn = () => {
     submitWord();
 
-    if (playerTurn === playerInfo.length - 1) {
-      setPlayerTurn(0);
-    } else {
-      setPlayerTurn(playerTurn+1);
-    }
+    let nextTurn = playerTurn === playerInfo.length - 1 ? 0 : playerTurn+1;
+    
+    localStorage.setItem('currentGame', JSON.stringify({info: playerInfo, currentTurn: nextTurn}));
+
+    setPlayerTurn(nextTurn);
   }
 
   const finishGame = () => {
@@ -290,6 +307,8 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
 
     setPlayerInfo(temp);
     setShowFinalScore(true);
+
+    localStorage.removeItem('currentGame');
   }
 
   const wordCheck = () => {
@@ -634,7 +653,7 @@ function SimpleScrabble(props: {names: string[], handleNewGame: () => void}) {
           </div>
 
           {showGameHistory &&
-            <div className="GameHistory">
+            <div className="GameHistoryAfterGame">
               <h2>your game history together</h2>
 
               {gameHistory.length > 0 ?

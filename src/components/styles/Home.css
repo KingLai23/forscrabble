@@ -1,16 +1,31 @@
+@import './colorScheme.css';
+
+.HomePage .FoundExistingGame {
+    color: #ffffff;
+    font-weight: 500;
+    width: 85vw;
+    max-width: 750px;
+    margin: auto;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    padding: 25px 0;
+    background-color: var(--sectionSecondary);
+    border: var(--sectionSecondaryBorder) solid 3px;
+    text-shadow: 2px 2px 2px #000000;
+}
+
 .HomePage .NameScreen {
     padding-top: 6vh;
 }
 
 .HomePage .NameScreen h1 {
     margin: 0;
-    font-size: 26px;
+    font-size: 24px;
     color: #ffffff;
 }
 
 .HomePage .NameScreen .InputBars .InputBar input {
     text-align: center;
-    background-color: #ffffff;
     padding: 8px 0;
     margin-top: 8px;
     width: 280px;
@@ -20,49 +35,40 @@
     resize: none;
     border-radius: 50px;
     border: none;
-    border: #dbdbdb solid 2px;
+    background-color: var(--darkInputBar);
+    border: var(--darkInputBarBorder) solid 2px;
+    color: #ffffff;
 }
 
 .confirmPlayerNames,
-.GetGameHistoryBefore {
+.continueExistingGame {
     text-align: center;
-    padding: 14px 0;
-    margin: 16px 4px 0;
-    width: 150px;
     outline: none;
-    font-size: 15px;
     resize: none;
     border-radius: 50px;
     font-weight: bold;
     cursor: pointer;
     border: none;
-    background-color: #9de0ff;
-    border: #317594 solid 2px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px;
+    background-image: var(--topGloss);
 }
 
 .confirmPlayerNames:hover,
-.GetGameHistoryBefore:hover {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.3) 0 0);
+.continueExistingGame:hover {
+    background-image: var(--lightHover);
+}
+
+.continueExistingGame {
+    padding: 7px 0;
+    width: 80px;
+    font-size: 18px;
+    margin-left: 10px;
 }
 
 .confirmPlayerNames {
-    padding: 8px 0;
+    padding: 10px 0;
     margin-top: 8px;
     width: 280px;
-    outline: none;
-    font-size: 20px;
-}
-
-.GetGameHistoryBefore {
-    padding: 8px 0;
-    margin-top: 8px;
-    width: 280px;
-    outline: none;
-    font-size: 20px;
-}
-
-.GetGameHistoryBefore {
-    background-color: #ff826c;
-    border: #b84642 solid 2px;
-    margin-top: 30px;
+    font-size: 18px;
 }

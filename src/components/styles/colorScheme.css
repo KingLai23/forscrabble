@@ -1,0 +1,50 @@
+:root {
+    /* Button Colors */
+    --regBtnBg: #46c4ff;
+    --regBtnBorder: #317594;
+
+    --searchBtnBg: #59df7a;
+    --searchBtnBorder: #307240;
+
+    --warningBtnBg: #ee3333;
+    --warningBtnBorder: #ac2828;
+
+    --topGloss: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
+    --lightHover: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
+
+    --tileGloss: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 60%, rgba(255, 255, 255, 0.199) 50%);
+
+    /* Section Bg Colors */
+    --sectionMainBg: #ad2727;
+    --sectionMainBorder: #611313;  
+
+    --sectionSecondary: #051218;
+    --sectionSecondaryBorder: #1a2d36;  
+
+    --woodSectionBg: #b48d53;
+    --woodSectionBorder: #614a28;
+
+    /* Scrabble Tile Colors */
+    --regTile: #cca774;
+    --regTileBorder: #5f4f38;
+
+    --doubleLetterTile: #81b0e6;
+    --doubleLetterTileBorder: #3c6594;
+    
+    --tripleLetterTile: #117197;
+    --tripleLetterTileBorder: #0c445a;
+
+    --doubleWordTile: #cf8570;
+    --doubleWordTileBorder: #7c4333;
+
+    --tripleWordTile: #be3922;
+    --tripleWordTileBorder: #83211d;
+
+    /* Input Bars */
+    --darkInputBar: #0c0c0c;
+    --darkInputBarBorder: #535353;
+
+    --lightInputBar: #e9e9e9;
+    --lightInputBarBorder: #fcfcfc;
+}
+
