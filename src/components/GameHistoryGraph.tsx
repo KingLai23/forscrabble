@@ -177,6 +177,7 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
     }
 
     useEffect(() => {
+        setSelectedGameOption(0);
         getGameHistory(0);
       }, [props.names]);
     

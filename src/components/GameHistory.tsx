@@ -52,7 +52,7 @@ function GameHistory(props: { names: string[] }) {
             .then((res) => {
                 setShowGameHistory(true);
 
-                let currentGameHistory = gameHistory;
+                let currentGameHistory = pageNum === 1 ? [] : gameHistory;
                 currentGameHistory = currentGameHistory.concat(res.data.getScrabbleHistoryOfPlayers);
 
                 console.log(res.data.getScrabbleHistoryOfPlayers.length);
