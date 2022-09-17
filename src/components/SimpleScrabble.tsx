@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './styles/SimpleScrabble.css';
 import { gql, useApolloClient } from '@apollo/client';
+import GameHistory from './GameHistory';
 
 type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], otherPlayerTiles: { tiles: string[], score: number} }
 
@@ -34,10 +35,9 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
 
   const [isGameSaved, setIsGameSaved] = useState(false);
   const [showGameHistory, setShowGameHistory] = useState(false);
-  const [gameHistory, setGameHistory] = useState<{players: string[], gameInfo: singlePlayerInfo[], date: string}[]>([]);
+  const [gameHistoryPlayers, setGameHistoryPlayers] = useState<string[]>([]);
 
   const [isSavingGame, setIsSavingGame] = useState(false);
-  const [isLoadingGameHistory, setIsLoadingGameHistory] = useState(false);
   const [saveGameText, setSaveGameText] = useState("save this game");
 
   // const validLettersLower = 'abcdefghijklmnopqrstuvwxyz';
@@ -116,6 +116,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     if (temp.length < 7) setIsBingo(false);
     
     setChangeTile(false);
+    setCurrentSelectedTile(-1);
     setShowIsValidWord(false);
     setEnteredWord(w);
     setEnteredTiles(temp);
@@ -124,6 +125,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const changeTileType = (i: number) => {
     if (changeTile) {
       setChangeTile(false);
+      setCurrentSelectedTile(-1);
     } else {
       setChangeTile(true);
       setCurrentSelectedTile(i);
@@ -139,6 +141,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     }
     setEnteredTiles(temp);
     setChangeTile(false);
+    setCurrentSelectedTile(-1);
   }
 
   const resetTileType = () => {
@@ -147,6 +150,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     temp[currentSelectedTile].mult = 0;
     setEnteredTiles(temp);
     setChangeTile(false);
+    setCurrentSelectedTile(-1);
   }
 
   const bingo = () => {
@@ -347,70 +351,27 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     setEnteredWord('');
     setChangeTile(false);
     setCurrentSelectedTile(-1);
+    setCurrentSelectedTile(-1);
     setIsBingo(false);
     setEnterTilesLeft(false);
     setShowFinalScore(false);
     setShowIsValidWord(false);
     setIsGameSaved(false);
     setShowGameHistory(false);
-    setGameHistory([]);
+    setGameHistoryPlayers([]);
     setSaveGameText("save this game");
     props.handleNewGame();
   }
 
-  const getGames = (players: string[]) => {
-    if (isLoadingGameHistory) return;
-
-    const GET_SCRABBLE_GAMES_BY_PLAYER = gql`
-      query getScrabbleGamesByPlayers($players: [String]) {
-        getScrabbleGamesByPlayers(players: $players) {
-          players
-          gameInfo {
-            name
-            score
-            words {
-              word
-              mult
-              points
-              bingo
-            }
-            lostPoints
-            lastLetters
-            otherPlayerTiles {
-              tiles
-              score
-            }
-          }
-          date
-        }
-      }
-    `;
-
-    setIsLoadingGameHistory(true);
-
-    apolloClient
-        .query({
-            query: GET_SCRABBLE_GAMES_BY_PLAYER,
-            variables: { players },
-            fetchPolicy: 'network-only'
-        })
-        .then((res) => {
-            setShowGameHistory(true);
-            setGameHistory(res.data.getScrabbleGamesByPlayers);
-            setIsLoadingGameHistory(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setIsLoadingGameHistory(false);
-        });
-  }
-
   const getGameHistoryAfterGame = () => {
+    if (showGameHistory) return;
+
     let players = [];
     for (let p of playerInfo) players.push(p.name);
     players.sort();
 
-    getGames(players);
+    setGameHistoryPlayers(players);
+    setShowGameHistory(true);
   }
 
   const saveGame = () => {
@@ -524,9 +485,9 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                   {enteredTiles.map((tile, i) => (
                     <span className="IndividualTile" key={i}>
                       {tile.letter === '_' ?
-                        <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)} />
+                        <button className="RegularTile" id={'color' + tile.mult + (i === currentSelectedTile)} onClick={() => changeTileType(i)} />
                         :
-                        <button className="RegularTile" id={'color' + tile.mult} onClick={() => changeTileType(i)}>{tile.letter}</button>
+                        <button className="RegularTile" id={'color' + tile.mult + (i === currentSelectedTile)} onClick={() => changeTileType(i)}>{tile.letter}</button>
                       }
                     </span>
                   ))}
@@ -655,13 +616,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                         }
                       </button>
 
-                      <button className="GetGameHistoryAfter" onClick={() => getGameHistoryAfterGame()}>
-                        {isLoadingGameHistory ?
-                          <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                          :
-                          <span>see game history</span>
-                        }
-                      </button>
+                      <button className="GetGameHistoryAfter" id={"historyLoaded" + showGameHistory} onClick={() => getGameHistoryAfterGame()}>see game history</button>
                     </div>
 
                   </div>
@@ -672,81 +627,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
 
           {showGameHistory &&
             <div className="GameHistoryAfterGame">
-              <h2>your game history together</h2>
-
-              {gameHistory.length > 0 ?
-                <div className="FoundGameHistory">
-                  {gameHistory.map((game, i) => (
-                    <div className="IndividualGame" key={i}>
-                      <div className="IndividualGameBorder" />
-
-                      <h3>{new Date(game.date).toLocaleString()}</h3>
-
-                      <div className="IndividualGameInfoContainer">
-                        {game.gameInfo.map((info, k) => (
-                          <div className="IndividualGameInfo" key={k}>
-                            <h2>{info.name}</h2>
-                            <h1>{info.score}</h1>
-
-                            {info.words.map((wordInfo, j) => (
-                              <div className="IndividualGameInfoWordHistory" key={j}>
-                                {wordInfo.word.map((letter, y) => (
-                                  <span className="IndividualTile" key={y}>
-                                    {wordInfo.word[y] === '_' ?
-                                      <button className="SmallTile" id={'color' + wordInfo.mult[y]} />
-                                      :
-                                      <button className="SmallTile" id={'color' + wordInfo.mult[y]}>{letter}</button>
-                                    }
-                                  </span>
-                                ))}
-
-                                <span className="PlayerWordScore">{wordInfo.points}</span>
-
-                                {wordInfo.bingo &&
-                                  <span className="BingoWord"> ★</span>
-                                }
-                              </div>
-                            ))}
-
-                            {info.lostPoints > 0 &&
-                              <div className="IndividualGameInfoSubtractedTiles" key={i}>
-                                {info.lastLetters.map((lastLetter, p) => (
-                                  <span className="LastTiles" key={p}>
-                                    <button className="SmallTile" id="color0">{lastLetter}</button>
-                                  </span>
-                                ))}
-
-                                <span className="PlayerWordScore">-{info.lostPoints}</span>
-                              </div>
-                            }
-
-                            {info.otherPlayerTiles.score > 0 &&
-                              <div className="IndividualGameInfoOtherPlayerTiles" key={'opt' + i}>
-                                {info.otherPlayerTiles.tiles.map((tile, y) => (
-                                  <span className="OtherPlayerTile" key={y}>
-                                    <button className="SmallTile" id='color0'>{tile}</button>
-                                  </span>
-                                ))}
-
-                                <span className="PlayerWordScore">+{info.otherPlayerTiles.score}</span>
-                              </div>
-                            }
-                          </div>
-                        ))}
-
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                :
-
-                <div className="NoGameHistory">
-                  <h3>none found, it's your first game together!</h3>
-                </div>
-              }
-
-
+              <GameHistory names={gameHistoryPlayers} />
             </div>
           }
         </div>

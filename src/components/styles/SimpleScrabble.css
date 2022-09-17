@@ -91,7 +91,8 @@
     vertical-align: top;
 }
 
-#gameSavedtrue {
+#gameSavedtrue,
+#historyLoadedtrue {
     background-color: #9c9c9c;
     border: #464646 solid 2px;
 }
@@ -126,9 +127,7 @@
 .ScoreTable,
 .PlayerLastTilesSection,
 .FinalScoreSections,
-.PlayerTotalScore,
-.IndividualGameInfoContainer,
-.IndividualGameInfoScore {
+.PlayerTotalScore {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
@@ -152,16 +151,6 @@
     font-size: 20px;
 }
 
-.IndividualGameInfoWordHistory,
-.IndividualGameInfoSubtractedTiles,
-.IndividualGameInfoOtherPlayerTiles {
-    padding-top: 8px;
-}
-
-.IndividualGameInfo h1 {
-    padding: 0;
-}
-
 .ScoreInfo,
 .WordEnter,
 .EndGameSection,
@@ -182,6 +171,11 @@
 .EndGameSection {
     background-color: var(--woodSectionBg);
     border: var(--woodSectionBorder) solid 3px;
+}
+
+.GameHistoryAfterGame {
+    background-color: var(--sectionSecondary);
+    border: var(--sectionSecondaryBorder) solid 3px;
 }
 
 .LastTileSectionButtons {
@@ -233,11 +227,11 @@
 }
 
 .WordValidity {
-    padding: 15px 20px 20px;
+    padding: 15px 0 20px;
     margin: auto;
     margin-top: 20px;
     width: 75vw;
-    max-width: 810px;
+    max-width: 800px;
     background-color: var(--sectionMainBg);
     border: var(--sectionMainBorder) solid 4px;
     border-radius: 10px;
@@ -257,7 +251,7 @@
 }
 
 .WordValidity .ValidScrabbleWord p {
-    padding: 0;
+    padding: 0 20px;
     margin-bottom: 0;
     font-size: 16px;
     font-weight: 500;
@@ -300,29 +294,42 @@
     border: #ffffff solid 3px; 
 }
 
-#color0 {
+#color0false,
+#color0true {
     background-color: var(--regTile);
     border-color: var(--regTileBorder);
 }
 
-#color1 {
+#color1false,
+#color1true {
     background-color: var(--doubleLetterTile);
     border-color: var(--doubleLetterTileBorder);
 }
 
-#color2 {
+#color2false,
+#color2true {
     background-color: var(--tripleLetterTile);
     border-color: var(--tripleLetterTileBorder);
 }
 
-#color3 {
-    background-color: var(--doubleWordTileBorder);
+#color3false,
+#color3true {
+    background-color: var(--doubleWordTile);
     border-color: var(--doubleWordTileBorder);
 }
 
-#color4 {
-    background-color: var(--tripleWordTileBorder);
+#color4false,
+#color4true {
+    background-color: var(--tripleWordTile);
     border-color: var(--tripleWordTileBorder);
+}
+
+#color0true,
+#color1true,
+#color2true,
+#color3true,
+#color4true {
+    background-image: var(--darkHover);
 }
 
 #scoreTileColor {
@@ -348,32 +355,6 @@
 
 .FinalizeScores h1 {
     padding-top: 0;
-}
-
-.IndividualGame {
-    padding-bottom: 10px;
-}
-
-.IndividualGame h4,
-.IndividualGame h2,
-.IndividualGame h3 {
-    margin: 5px 0;
-}
-
-.IndividualGame h4 {
-    font-size: 30px;
-}
-
-.IndividualGame h3 {
-    padding-top: 15px;
-}
-
-.IndividualGameBorder {
-    border-bottom: 2px solid #ffffff ;
-    width: 80%;
-    margin: auto;
-    padding-top: 10px;
-    box-shadow: 0 2px 0 #000000;
 }
 
 /* LOADING ANIMATION */

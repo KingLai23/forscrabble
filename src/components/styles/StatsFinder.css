@@ -100,7 +100,9 @@
 }
 
 .PlayerStats,
-.GameHistory {
+.AlltimeHighscores,
+.GroupGameHistoryGraph,
+.GroupGameHistory {
     width: 88vw;
     max-width: 1000px;
     margin: auto;
@@ -114,7 +116,9 @@
 
 .PlayerGameInfo,
 .PlayerHighscores,
-.PlayerWordHighscores {
+.PlayerWordHighscores,
+.AlltimeGameHS,
+.AlltimeWordHS {
     width: 85%;
     margin: auto;
     border-radius: 10px;
@@ -123,6 +127,15 @@
     background-color: var(--sectionMainBg);
     border: var(--sectionMainBorder) solid 4px;
     text-shadow: 2px 2px 2px #000000;
+}
+
+.PlayerRecentGames {
+    width: 85%;
+    margin: auto;
+    margin-top: 40px;
+    padding: 30px 0;
+    border-radius: 10px;
+    border: var(--sectionSecondaryBorder) solid 4px;
 }
 
 .GameHistoryPlayersInput input {
@@ -139,27 +152,6 @@
     background-color: var(--darkInputBar);
     border: var(--darkInputBarBorder) solid 2px;
     color: #ffffff;
-}
-
-.GameHistoryGraph {
-    margin: auto;
-    width: 80%;
-}
-
-#chartContainer .apexcharts-tooltip {
-    color: #ffffff;
-    background-color: var(--sectionSecondary);
-    border: 2px solid rgb(169, 186, 196);
-}
-
-#chartContainer .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
-    background:  var(--sectionSecondary);
-    border-bottom: 2px solid rgb(80, 98, 109);
-    font-size: 14px !important;
-}
-
-#chartContainer .apexcharts-tooltip-text {
-    font-size: 16px !important;
 }
 
 .PlayerGameInfo table {
@@ -209,7 +201,7 @@ th {
 
 .IndividualPlayerHighscoreBorder {
     border-bottom: 2px solid #ffe6e6;
-    width: 85%;
+    width: 82%;
     margin: auto;
     margin-bottom: 15px;
     box-shadow: 0 2px 0 #000000;
@@ -238,14 +230,12 @@ th {
 }
 
 .WordHighscoreTitle,
-.HighscoreTitle, 
-.GameHistoryTitle {
+.HighscoreTitle {
     margin-bottom: 20px;
 }
 
 .WordHighscoreTitle p,
-.HighscoreTitle p,
-.GameHistoryTitle p {
+.HighscoreTitle p {
     font-size: 24px;
     padding: 0;
     margin: 0;
@@ -253,7 +243,18 @@ th {
 }
 
 .IndividualPlayerWordHighscore {
-    padding: 10px 0;
+    padding: 12px 0;
+}
+
+.AlltimeWordHSName {
+    font-size: 22px;
+    font-weight: bold;
+    padding-right: 20px;
+}
+
+.AlltimeGameHSName {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .WordHSTile {
@@ -314,6 +315,7 @@ th {
     position: relative;
     width: 80px;
     height: 80px;
+    margin: auto;
 }
 
 .lds-ellipsis-stats div {

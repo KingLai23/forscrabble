@@ -4,9 +4,9 @@
     color: #ffffff;
     margin: auto;
     margin-top: 80px;
-    padding: 0 40px 30px;
+    padding: 0 0 30px;
     width: 88vw;
-    max-width: 920px;
+    max-width: 1000px;
     background-color: var(--sectionSecondary);
     border: var(--sectionSecondaryBorder) solid 4px;
     border-radius: 10px;
@@ -67,7 +67,7 @@
 }
 
 .ScrabbleWordChecker .ValidScrabbleWord p {
-    padding: 0;
+    padding: 0 40px;
     font-size: 16px;
     font-weight: 500;
     font-style: italic;

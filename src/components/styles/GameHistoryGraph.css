@@ -1,0 +1,59 @@
+.GameHistoryOption {
+    text-align: center;
+    padding: 4px 0;
+    margin: 0 4px 6px;
+    width: 90px;
+    outline: none;
+    font-size: 15px;
+    resize: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: var(--darkInputBar);
+    border: var(--darkInputBarBorder) solid 2px;
+    color: #ffffff;
+}
+
+#isSelectedtrue .GameHistoryOption {
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px;
+    color: #000000;
+    background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
+}
+
+.GameHistoryOption:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.13) 0 0);
+}
+
+.GameHistoryGraphed {
+    margin: auto;
+    width: 80%;
+}
+
+.GameHistoryTitle {
+    margin-bottom: 20px;
+}
+
+.GameHistoryTitle p {
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+#GraphContainer .apexcharts-tooltip {
+    color: #ffffff;
+    background-color: var(--sectionSecondary);
+    border: 2px solid rgb(169, 186, 196);
+}
+
+#GraphContainer .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+    background:  var(--sectionSecondary);
+    border-bottom: 2px solid rgb(80, 98, 109);
+    font-size: 14px !important;
+}
+
+#GraphContainer .apexcharts-tooltip-text {
+    font-size: 16px !important;
+}
