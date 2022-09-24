@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './styles/Home.css';
 import ScrabbleLogic from './SimpleScrabble';
+import SimpleScrabble from './SimpleScrabbleV2';
 import Stats from './StatsFinder';
 import ScrabbleWordChecker from './ScrabbleWordChecker';
 
@@ -10,6 +11,8 @@ function Home() {
 
     const [foundExistingGame, setFoundExistingGame] = useState(false);
     const [useExistingGame, setUseExistingGame] = useState(true);
+
+    const [version, setVersion] = useState(0);
 
     const checkForExistingGame = () => {
         let currentGame = localStorage.getItem('currentGame');
@@ -80,17 +83,27 @@ function Home() {
 
                         <button className="confirmPlayerNames" onClick={() => startGame()}>start game</button>
 
+                        {/* <div className="VersionSelect">
+                            <p>*pick a ui version to use*</p>
+
+                            <button id={"isThisVersion" + (version === 0)} onClick={() => setVersion(0)}>new</button>
+                            <button id={"isThisVersion" + (version === 1)} onClick={() => setVersion(1)}>old</button>
+                        </div> */}
                     </div>
-
+                    
                     <ScrabbleWordChecker />
-
                     <Stats />
                 </div>
 
                 :
 
                 <div className="ScrabbleGame">
-                    <ScrabbleLogic names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame} />
+                    <SimpleScrabble names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame}/>
+                    {/* {version === 0 ?
+                        <SimpleScrabble names = {enteredNames} handleNewGame = {handleNewGame}/>
+                        :
+                        <ScrabbleLogic names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame} />
+                    } */}
                 </div>
             }
         </div>

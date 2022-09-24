@@ -1,10 +1,21 @@
 :root {
     /* Button Colors */
+    --startGameBtn: #46c4ff;
+    --startGameBtnBorder: #317594;
+
     --regBtnBg: #46c4ff;
     --regBtnBorder: #317594;
 
+    --secondaryBtn: #0c1c3f;
+    --secondaryBtnBorder: #050d20;
+
     --searchBtnBg: #59df7a;
     --searchBtnBorder: #307240;
+
+    --bingo: #ffe550;
+    --bingoBorder: #ffbb00;
+
+    --toggleBtnBg: #48a4eb;
 
     --warningBtnBg: #ee3333;
     --warningBtnBorder: #ac2828;
@@ -13,19 +24,33 @@
     --lightHover: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
     --darkHover: linear-gradient(rgba(0, 0, 0, 0.4) 0 0);
 
+    --darkenUnfilledTile: linear-gradient(rgba(0, 0, 0, 0.28) 0 0);
+
     --tileGloss: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 60%, rgba(255, 255, 255, 0.199) 50%);
 
     /* Section Bg Colors */
+    /* --siteBg: linear-gradient(180deg, #15263d, #04070c); */
+    --siteBg: linear-gradient(180deg, #131313, #000000);
+    --deepBlueGradient: linear-gradient(180deg, #0c1c3f, #000308);
+    /* --wordCheckBg: linear-gradient(180deg, #123b58, #071824); */
+    --redGradient: linear-gradient(180deg, #9c1616, #330909);
+    --calmBlueGradient: linear-gradient(180deg, #122842, #04070c);
+
     --sectionMainBg: #ad2727;
     --sectionMainBorder: #611313;  
 
-    --sectionSecondary: #051218;
-    --sectionSecondaryBorder: #1a2d36;  
+    --sectionSecondary: rgb(10, 16, 31);
+    --sectionSecondaryBorder: rgb(32, 45, 78);  
 
     --woodSectionBg: #b48d53;
     --woodSectionBorder: #614a28;
 
+    --scrabbleBoard: #721919;
+    --scrabbleBoardBorder: #3f1313;
+
     /* Scrabble Tile Colors */
+    --filledTile: #aa895a;
+
     --regTile: #cca774;
     --regTileBorder: #5f4f38;
 
@@ -38,14 +63,18 @@
     --doubleWordTile: #cf8570;
     --doubleWordTileBorder: #7c4333;
 
-    --tripleWordTile: #be3922;
+    --tripleWordTile: #be4622;
     --tripleWordTileBorder: #83211d;
 
     /* Input Bars */
     --darkInputBar: #0c0c0c;
-    --darkInputBarBorder: #535353;
+    --darkInputBarBorder: #cacaca;
 
-    --lightInputBar: #e9e9e9;
+    --lightInputBar: #e6e6e6;
     --lightInputBarBorder: #fcfcfc;
+
+    /* random*/
+    --darkGraphBg: #0f1d29;
+    --darkGraphBorder: #1a2d36;
 }
 

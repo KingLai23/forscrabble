@@ -2,18 +2,16 @@
 
 .ScrabbleWordChecker {
     color: #ffffff;
-    margin: auto;
-    margin-top: 80px;
-    padding: 0 0 30px;
-    width: 88vw;
-    max-width: 1000px;
-    background-color: var(--sectionSecondary);
-    border: var(--sectionSecondaryBorder) solid 4px;
-    border-radius: 10px;
+    padding: 15px 0 45px;
     text-shadow: 2px 2px 2px #000000;
+    background-image: var(--redGradient);
 }
 
-.ScrabbleWordChecker .Title h1 {
+.ScrabbleWordChecker ::placeholder {
+    color: #c7c7c7;
+}
+
+.ScrabbleWordChecker h1 {
     padding: 0 0 10px;
     font-size: 24px;
 }
@@ -57,6 +55,7 @@
 .ScrabbleWordChecker .InvalidScrabbleWord h2,
 .ScrabbleWordChecker .ValidScrabbleWord h2{
     padding: 0;
+    margin: 15px 0 0;
     font-size: 22px;
     font-weight: 500;
 }
@@ -68,6 +67,7 @@
 
 .ScrabbleWordChecker .ValidScrabbleWord p {
     padding: 0 40px;
+    margin: 10px 0 0;
     font-size: 16px;
     font-weight: 500;
     font-style: italic;

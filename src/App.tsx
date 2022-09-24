@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <div className="Title">
         <img src={logo} alt='scrabble calc'></img>
-        <span>beta</span>
+        <span>beta 2.0</span>
       </div>
 
       <div className="Home">

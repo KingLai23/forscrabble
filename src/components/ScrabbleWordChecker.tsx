@@ -39,13 +39,15 @@ function ScrabbleWordChecker() {
     }
 
     const checkWordIsValid = () => {
+        if (wordToCheck.length === 0) return;
+
         setCurrentWordToCheck(wordToCheck);
         setIndexOfWord(scrabbleWords.indexOf(wordToCheck.toUpperCase()));
     }
 
     return (
         <div className="ScrabbleWordChecker">
-            <div className="Title"><h1>scrabble word checker</h1></div>
+            <h1>scrabble word checker</h1>
 
             <div className="WordInput">
                 <input

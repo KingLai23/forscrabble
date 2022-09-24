@@ -1,20 +1,23 @@
+@import './components/styles/colorScheme.css';
+
 .App {
   text-align: center;
-  background-color: #000000;
+  background-image: var(--siteBg);
   min-height: 100vh;
 }
 
 .App .Title {
-  padding-top: 30px;
+  padding: 15px 0;
+  background-color: #000000;
 }
 
 .App .Title img {
-  height: 45px;
+  height: 40px;
 }
 
 .App .Title span {
   color: #ffffff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
 }
 

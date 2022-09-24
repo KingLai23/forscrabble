@@ -1,8 +1,20 @@
 @import './colorScheme.css';
 
+.HomePage {
+    margin: auto;
+    width: 1200px;
+}
+
+@media only screen and (max-width: 1449px) {
+    .HomePage {
+        width: 100%;
+    }
+}
+
 .HomePage .FoundExistingGame {
     color: #ffffff;
     font-weight: 500;
+    font-size: 14px;
     width: 85vw;
     max-width: 750px;
     margin: auto;
@@ -14,19 +26,25 @@
     text-shadow: 2px 2px 2px #000000;
 }
 
+.HomePage .FoundExistingGame p {
+    margin: 4px 0 0;
+}
+
 .HomePage .NameScreen {
-    padding-top: 6vh;
+    padding: 60px 0 70px;
+    background-image: var(--calmBlueGradient);
 }
 
 .HomePage .NameScreen h1 {
     margin: 0;
     font-size: 24px;
     color: #ffffff;
+    text-shadow: 2px 2px 2px #000000;
 }
 
 .HomePage .NameScreen .InputBars .InputBar input {
     text-align: center;
-    padding: 8px 0;
+    padding: 4px 0;
     margin-top: 8px;
     width: 280px;
     outline: none;
@@ -35,9 +53,8 @@
     resize: none;
     border-radius: 50px;
     border: none;
-    background-color: var(--darkInputBar);
-    border: var(--darkInputBarBorder) solid 2px;
-    color: #ffffff;
+    background-color: var(--lightInputBar);
+    border: var(--lightInputBarBorder) solid 2px;
 }
 
 .confirmPlayerNames,
@@ -49,8 +66,8 @@
     font-weight: bold;
     cursor: pointer;
     border: none;
-    background-color: var(--regBtnBg);
-    border: var(--regBtnBorder) solid 2px;
+    background-color: var(--startGameBtn);
+    border: var(--startGameBtnBorder) solid 2px;
     background-image: var(--topGloss);
 }
 
@@ -60,15 +77,50 @@
 }
 
 .continueExistingGame {
-    padding: 7px 0;
+    padding: 2.5px 0;
     width: 80px;
-    font-size: 18px;
+    font-size: 17px;
     margin-left: 10px;
 }
 
 .confirmPlayerNames {
-    padding: 10px 0;
+    padding: 7px 0;
     margin-top: 8px;
     width: 280px;
     font-size: 18px;
+}
+
+.VersionSelect p {
+    color: #ffffff;
+    font-weight: 500;
+    margin: 0;
+    padding-top: 15px;
+}
+
+.VersionSelect button {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    width: 135px;
+    padding: 1px;
+    margin: 10px 4px;
+    font-size: 16px;
+    border-radius: 50px;
+    border: #ffffff solid 2px; 
+}
+
+.VersionSelect button:hover {
+    cursor: pointer;
+}
+
+.VersionSelect #isThisVersiontrue {
+    background-color: #d3e5f1;
+    color: #000000;
+}
+
+.VersionSelect #isThisVersionfalse {
+    background-color: transparent;
+    color: #ffffff;
+    text-shadow: 2px 2px 2px #000000;
 }

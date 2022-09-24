@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/StatsFinder.css';
 import { gql, useApolloClient } from '@apollo/client';
 import GameHistoryGraph from './GameHistoryGraph';
@@ -8,7 +8,7 @@ function StatsFinder() {
     const apolloClient = useApolloClient();
 
     const statOptions = ['game history', 'player stats', 'all time stats'];
-    const [selectedOption, setSelectedOption] = useState(1);
+    const [selectedOption, setSelectedOption] = useState(2);
 
     const numGameHSToDisplay = 5;
     const numWordHSToDisplay = 10;
@@ -171,7 +171,6 @@ function StatsFinder() {
                 fetchPolicy: 'network-only'
             })
             .then((res) => {
-                console.log(res.data.getAlltimeStats)
                 setAlltimeStats(res.data.getAlltimeStats);
                 setLoadingAlltimeStats(false);
             })
@@ -296,6 +295,10 @@ function StatsFinder() {
         queryPlayerStats(playerStatsName, numGameHSToDisplay, numWordHSToDisplay);
     }
 
+    useEffect(() => {
+        getAlltimeStats();
+    }, []);
+
     return (
         <div className="StatsFinder">
             <h1>find some stats here</h1>
@@ -313,7 +316,7 @@ function StatsFinder() {
 
                     <div>
                         {gameHistoryPlayers.map((n: string, i: number) => (
-                            <span className="GameHistoryPlayersInput" key={i}>
+                            <div className="GameHistoryPlayersInput" key={i}>
                                 <input
                                     placeholder={"player " + (i + 1)}
                                     name="playerNameInput"
@@ -328,7 +331,7 @@ function StatsFinder() {
                                         }
                                     }}
                                 />
-                            </span>
+                            </div>
                         ))}
                         <button className="GameHistorySearch" onClick={() => getGameHistory()}>find</button>
                     </div>
@@ -416,7 +419,7 @@ function StatsFinder() {
                                                 <td>total</td>
                                                 <th>{playerStats.gamesInfo.total.gamesPlayed}</th>
                                                 <th>{playerStats.gamesInfo.total.gamesWon}</th>
-                                                <th>{playerStats.gamesInfo.total.averageScore}</th>
+                                                <th>-</th>
                                             </tr>
                                         </table>
                                     </div>
@@ -440,7 +443,7 @@ function StatsFinder() {
                                                         {playerStats.gameHighscores.twoPlayer.map((gameScore, i) => (
                                                             <div className="IndividualPlayerHighscoreTiles" key={i}>
                                                                 <div className="IndividualPlayerHighscoreBorder" />
-                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                <p>{new Date(gameScore.date).toLocaleString().slice(0, -6) + new Date(gameScore.date).toLocaleString().slice(-3)}</p>
                                                                 {gameScore.score.toString().split('').map((num, k) => (
                                                                     <span key={k}>
                                                                         <button className="HighscoreTiles" id='color0'>{num}</button>
@@ -464,7 +467,7 @@ function StatsFinder() {
                                                         {playerStats.gameHighscores.threePlayer.map((gameScore, i) => (
                                                             <div className="IndividualPlayerHighscoreTiles" key={i}>
                                                                 <div className="IndividualPlayerHighscoreBorder" />
-                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                <p>{new Date(gameScore.date).toLocaleString().slice(0, -6) + new Date(gameScore.date).toLocaleString().slice(-3)}</p>
                                                                 {gameScore.score.toString().split('').map((num, k) => (
                                                                     <span key={k}>
                                                                         <button className="HighscoreTiles" id='color0'>{num}</button>
@@ -487,7 +490,7 @@ function StatsFinder() {
                                                         {playerStats.gameHighscores.fourPlayer.map((gameScore, i) => (
                                                             <div className="IndividualPlayerHighscoreTiles" key={i}>
                                                                 <div className="IndividualPlayerHighscoreBorder" />
-                                                                <p>{new Date(gameScore.date).toLocaleString()}</p>
+                                                                <p>{new Date(gameScore.date).toLocaleString().slice(0, -6) + new Date(gameScore.date).toLocaleString().slice(-3)}</p>
                                                                 {gameScore.score.toString().split('').map((num, k) => (
                                                                     <span key={k}>
                                                                         <button className="HighscoreTiles" id='color0'>{num}</button>
@@ -558,12 +561,12 @@ function StatsFinder() {
 
                         <div className="AlltimeHighscores">
                             <div className="PlayerStatsTitle">
-                                <h1>viewing all time stats</h1>
+                                <h1>all time stats</h1>
                             </div>
 
                             <div className="AlltimeGameHS">
                                 <div className="HighscoreTitle">
-                                    <p>top {numAlltimeGames} games of all time</p>
+                                    <p>top {numAlltimeGames} game scores</p>
                                 </div>
 
                                 <div className="HighscoreTableTitles">
@@ -647,7 +650,7 @@ function StatsFinder() {
 
                             <div className="AlltimeWordHS">
                                 <div className="WordHighscoreTitle">
-                                    <p>top {numAlltimeWords} words of all time</p>
+                                    <p>top {numAlltimeWords} word scores</p>
                                 </div>
 
                                 <div>

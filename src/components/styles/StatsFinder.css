@@ -2,8 +2,8 @@
 
 .StatsFinder {
     color: #ffffff;
-    margin-top: 80px;
-    padding-bottom: 50px;
+    padding: 50px 0 120px;
+    background-image: var(--deepBlueGradient);
 }
 
 .StatsFinder h1 {
@@ -18,7 +18,7 @@
 
 .StatOption {
     text-align: center;
-    padding: 12px 0;
+    padding: 10px 0;
     margin: 16px 4px 0;
     width: 180px;
     outline: none;
@@ -27,15 +27,14 @@
     border-radius: 50px;
     font-weight: bold;
     cursor: pointer;
-    border: none;
-    background-color: var(--darkInputBar);
+    background-color: transparent;
     border: var(--darkInputBarBorder) solid 2px;
     color: #ffffff;
 }
 
 #isSelectedtrue {
-    background-color: var(--regBtnBg);
-    border: var(--regBtnBorder) solid 2px;
+    background-color: #ffffff;
+    /* border: var(--regBtnBorder) solid 2px; */
     color: #000000;
     background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
 }
@@ -89,9 +88,9 @@
 }
 
 .GameHistorySearch {
-    padding: 8px 0;
-    margin: 8px 5px;
-    width: 120px;
+    padding: 6px 0;
+    margin: 4px 5px;
+    width: 240px;
 }
 
 .StatOptionSearch:hover,
@@ -103,8 +102,7 @@
 .AlltimeHighscores,
 .GroupGameHistoryGraph,
 .GroupGameHistory {
-    width: 88vw;
-    max-width: 1000px;
+    width: 85%;
     margin: auto;
     border-radius: 20px;
     margin-top: 40px;
@@ -135,14 +133,15 @@
     margin-top: 40px;
     padding: 30px 0;
     border-radius: 10px;
-    border: var(--sectionSecondaryBorder) solid 4px;
+    border: var(--darkGraphBorder) solid 4px;
+    background-color: var(--darkGraphBg);
 }
 
 .GameHistoryPlayersInput input {
     text-align: center;
     padding: 6px 0;
-    margin: 8px 5px;
-    width: 180px;
+    margin: 4px 5px;
+    width: 240px;
     outline: none;
     font-size: 18px;
     font-weight: bold;
@@ -236,10 +235,14 @@ th {
 
 .WordHighscoreTitle p,
 .HighscoreTitle p {
-    font-size: 24px;
+    font-size: 22px;
     padding: 0;
     margin: 0;
     font-weight: bold;
+}
+
+.PlayerStatsTitle h1 {
+    font-size: 24px;
 }
 
 .IndividualPlayerWordHighscore {

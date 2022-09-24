@@ -10,10 +10,19 @@
     margin: auto;
     width: 85%;
     border-radius: 15px;
-    margin-top: 20px;
-    padding: 5px 0 25px;
+    margin-top: 10px;
+    padding: 0 0 15px;
     background-color: var(--sectionMainBg);
     border: var(--sectionMainBorder) solid 3px;  
+    cursor: pointer;
+}
+
+#IsIndividualGameToggledfalse:hover {
+    background-image: var(--darkHover);
+}
+
+#IsIndividualGameToggledtrue:hover {
+    background-image: var(--lightHover);
 }
 
 .IndividualGame h4,
@@ -28,34 +37,28 @@
     padding-top: 8px;
 }
 
-.IndividualGameInfo h1 {
-    padding: 0;
-    font-size: 28px;
-}
-
-.IndividualGameInfo h2 {
-    font-size: 24px;
+.IndividualGameInfoContainer .IndividualGameInfo h2 {
+    font-size: 18px;
 }
 
 .IndividualGameScore {
-    font-size: 26px;
+    font-size: 22px;
 }
 
-.IndividualGame h3 {
-    padding-top: 15px;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.LoadMoreGames {
-    text-align: center;
-    padding: 5px 0;
-    margin: 10px 4px 6px;
-    width: 120px;
-    outline: none;
+.IndividualGameDateAndToggle {
+    padding: 15px 0 0;
+    margin: 0;
     font-size: 15px;
+    font-weight: 500;
+    color: #f0f0f0;
+}
+
+.LoadMoreGames,
+.ViewIndividualGame {
+    text-align: center;
+    outline: none;
     resize: none;
-    border-radius: 5px;
+    border-radius: 30px;
     font-weight: bold;
     cursor: pointer;
     border: none;
@@ -64,10 +67,95 @@
     background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
 }
 
-.LoadMoreGames:hover {
+.LoadMoreGames {
+    padding: 5px 0;
+    font-size: 15px;
+    margin: 15px 4px 6px;
+    width: 120px;
+}
+
+.ViewIndividualGame {
+    padding: 4px 0;
+    font-size: 14px;
+    margin: 0 0 0 10px;
+    width: 105px;
+    background-color: var(--toggleBtnBg);
+}
+
+
+.LoadMoreGames:hover,
+.ViewIndividualGame:hover {
     background-image: linear-gradient(rgba(255, 255, 255, 0.13) 0 0);
 }
 
 .AlignLoadingSymbol {
     margin: auto;
+}
+
+.FoundBoardState {
+    width: 650px;
+    padding: 20px;
+    margin: auto;
+    margin-top: 20px;
+    border: var(--scrabbleBoardBorder) solid 3px;
+    border-radius: 10px;;
+    background-color: var(--scrabbleBoard);
+}
+
+#GameHistoryEmptyTile0,
+#GameHistoryEmptyTile1,
+#GameHistoryEmptyTile2,
+#GameHistoryEmptyTile3,
+#GameHistoryEmptyTile4 {
+    background-image: var(--darkenUnfilledTile);
+}
+
+#GameHistoryEmptyTile0 {
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
+}
+
+#GameHistoryEmptyTile1 {
+    background-color: var(--doubleLetterTile);
+    border-color: var(--doubleLetterTileBorder);
+}
+
+#GameHistoryEmptyTile2 {
+    background-color: var(--tripleLetterTile);
+    border-color: var(--tripleLetterTileBorder);
+}
+
+#GameHistoryEmptyTile3 {
+    background-color: var(--doubleWordTile);
+    border-color: var(--doubleWordTileBorder);
+}
+
+#GameHistoryEmptyTile4 {
+    background-color: var(--tripleWordTile);
+    border-color: var(--tripleWordTileBorder);
+}
+
+#GameHistoryFilledTile0 {
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
+}
+
+#GameHistoryFilledTile1 {
+    background-color: var(--regTile);
+    border-color: var(--doubleLetterTile);
+}
+
+#GameHistoryFilledTile2 {
+    background-color: var(--regTile);
+    border-color: var(--tripleLetterTile);
+}
+
+#GameHistoryFilledTile3 {
+    background-color: var(--regTile);
+    border-color: var(--doubleWordTile);
+}
+
+#GameHistoryFilledTile4 {
+    background-color: var(--regTile);
+    border-color: var(--tripleWordTile);
 }

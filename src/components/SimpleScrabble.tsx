@@ -332,17 +332,29 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     setShowIsValidWord(true);
   }
 
-  const undoLastWord = () => {
-    let temp = [...playerInfo];
-
-    let removedWord = temp[playerTurn].words.pop();
-    if (removedWord !== undefined) {
-      temp[playerTurn].score-=removedWord.points;
-      setPlayerInfo(temp);
-    }
+  const previousTurn = () => {
+    let previousTurn = playerTurn > 0  ? playerTurn-1 : playerInfo.length - 1;
+    setPlayerTurn(previousTurn);
   }
 
-  const playAgain = () => {
+  // const undoLastWord = () => {
+  //   let temp = [...playerInfo];
+
+  //   let removedWord = temp[playerTurn].words.pop();
+  //   if (removedWord !== undefined) {
+  //     temp[playerTurn].score-=removedWord.points;
+  //     setPlayerInfo(temp);
+  //   }
+  // }
+
+  const deleteWord = (playerIndex: number, wordIndex: number) => {
+    let temp = [...playerInfo];
+    temp[playerIndex].score-=temp[playerIndex].words[wordIndex].points;
+    temp[playerIndex].words = temp[playerIndex].words.slice(0, wordIndex).concat(temp[playerIndex].words.slice(wordIndex+1));
+    setPlayerInfo(temp);
+  }
+
+  const leaveGame = () => {
     setShowGame(false);
     setPlayerInfo([]);
     setRemainingLetters([]);
@@ -437,6 +449,10 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                         {wordInfo.bingo &&
                           <span className="BingoWord"> ★</span>
                         }
+
+                        {!showFinalScore &&
+                          <span><button className="DeleteWord" onClick={() => deleteWord(i, k)}>×</button></span>
+                        }
                       </div>
                     ))}
 
@@ -524,7 +540,8 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                 <button className="ConfirmWord" onClick={() => submitWord()}>another word</button>
 
                 <div className="CheckWordRow">
-                  <button className="UndoLastWord" onClick={() => undoLastWord()}>undo your last word</button>
+                  {/* <button className="UndoLastWord" onClick={() => undoLastWord()}>undo your last word</button> */}
+                  <button className="GoBackTurn" onClick={() => previousTurn()}>previous turn</button>
                   <button className="WordCheck" onClick={() => wordCheck()}>check word</button>
                 </div>
 
@@ -546,8 +563,10 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                 }
 
                 <div className="EndGameRow">
-                  <button className="EndGame" onClick={() => finishGame()}>finish game</button>
+                  <button className="EndGame" onClick={() => finishGame()}>enter remaining tiles</button>
                 </div>
+
+                <button className="LeaveGame" onClick={() => leaveGame()}>leave game</button>
               </div>
 
               :
@@ -605,7 +624,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                       ))}
                     </div>
 
-                    <button className="PlayAgain" onClick={() => playAgain()}>back home</button>
+                    <button className="PlayAgain" onClick={() => leaveGame()}>exit</button>
 
                     <div>
                       <button className="SaveGame" id={"gameSaved" + isGameSaved} onClick={() => saveGame()}>

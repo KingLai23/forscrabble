@@ -1,0 +1,451 @@
+@import "./colorScheme.css";
+
+.SimpleScrabbleV2 {
+    padding: 20px 0 50px;
+}
+
+.ScoreInfo {
+    color: #ffffff;
+    text-shadow: 2px 2px 2px #000000;
+    margin: auto;
+    width: 85vw;
+    max-width: 2000px;
+    border-radius: 5px;
+    margin-top: 16px;
+    padding: 15px 0 15px;
+    background-color: var(--sectionMainBg);
+    border: var(--sectionMainBorder) solid 3px;  
+}
+
+.ScoreInfo h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.ScoreTable,
+.PlayerLastTilesSection,
+.FinalScoreSections,
+.PlayerTotalScore {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+}
+
+.PlayerScore {
+    color: #ffffff;
+    padding: 0 2px;
+}
+
+.PlayerScore p {
+    font-size: 2vh;
+}
+
+.PlayerWordHistory {
+    padding: 4px 0;
+}
+
+.SmallTile {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: var(--tileGloss);
+    height: 40px;
+    width: 40px;
+    margin: 1px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: #ffffff solid 2px; 
+}
+
+.PlayerWordHistory:hover {
+    background-image: var(--lightHover);
+}
+
+.PlayerWordScore {
+    padding-left: 20px;
+    font-size: 18px;
+}
+
+.WordEnterSection {
+    color: #ffffff;
+    text-shadow: 2px 2px 2px #000000;
+    margin: auto;
+    width: 85vw;
+    max-width: 2000px;
+    border-radius: 5px;
+    margin-top: 16px;
+    padding: 30px 0;
+    background-color: var(--woodSectionBg);
+    border: var(--woodSectionBorder) solid 3px;  
+}
+
+.InGameScrabbleBoard {
+    width: 650px;
+    padding: 30px;
+    margin: auto;
+    border: var(--scrabbleBoardBorder) solid 3px;
+    border-radius: 10px;;
+    background-color: var(--scrabbleBoard);
+}
+
+.IndividualInGameBoardTiles button {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: var(--tileGloss);
+    height: 42px;
+    width: 42px;
+    margin: 0.5px;
+    font-size: 24px;
+    border-radius: 2px;
+    border: #ffffff solid 3px; 
+}
+
+#EmptyTile0,
+#EmptyTile1,
+#EmptyTile2,
+#EmptyTile3,
+#EmptyTile4 {
+    background-image: var(--darkenUnfilledTile);
+}
+
+#EmptyTile0:hover,
+#EmptyTile1:hover,
+#EmptyTile2:hover,
+#EmptyTile3:hover,
+#EmptyTile4:hover {
+    background-image: var(--lightHover);
+    cursor: pointer;
+}
+
+
+#EmptyTile0 {
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
+}
+
+#EmptyTile1 {
+    background-color: var(--doubleLetterTile);
+    border-color: var(--doubleLetterTileBorder);
+}
+
+#EmptyTile2 {
+    background-color: var(--tripleLetterTile);
+    border-color: var(--tripleLetterTileBorder);
+}
+
+#EmptyTile3 {
+    background-color: var(--doubleWordTile);
+    border-color: var(--doubleWordTileBorder);
+}
+
+#EmptyTile4 {
+    background-color: var(--tripleWordTile);
+    border-color: var(--tripleWordTileBorder);
+}
+
+#FilledTile0 {
+    background-color: var(--regTile);
+    border-color: var(--regTileBorder);
+}
+
+#FilledTile1 {
+    background-color: var(--regTile);
+    border-color: var(--doubleLetterTile);
+}
+
+#FilledTile2 {
+    background-color: var(--regTile);
+    border-color: var(--tripleLetterTile);
+}
+
+#FilledTile3 {
+    background-color: var(--regTile);
+    border-color: var(--doubleWordTile);
+}
+
+#FilledTile4 {
+    background-color: var(--regTile);
+    border-color: var(--tripleWordTile);
+}
+
+.WordInputAndButtons {
+    width: 710px;
+    background-image: var(--redGradient);
+    border: var(--sectionMainBorder) solid 3px;
+    border-radius: 5px;;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px 0 30px;
+}
+
+.WordInputAndButtons h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.WordInputAndButtons input {
+    text-align: center;
+    outline: none;
+    font-weight: bold;
+    resize: none;
+    border-radius: 50px;
+    background-color: var(--lightInputBar);
+    border: var(--lightInputBarBorder) solid 2px;
+}
+
+.WordInputAndButtons input {
+    padding: 4px 0;
+    margin-top: 8px;
+    margin-right: 8px;
+    width: 252px;
+    font-size: 22px;
+}
+
+.submitWord {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    width: 110px;
+    padding: 10px 0;
+    font-size: 16px;
+    border-radius: 50px;
+    background-color: var(--searchBtnBg);
+    border: var(--searchBtnBorder) solid 2px;
+}
+
+.WordDirection button {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    width: 150px;
+    padding: 1px;
+    margin: 10px 4px;
+    font-size: 16px;
+    border-radius: 50px;
+    border: #ffffff solid 2px; 
+}
+
+.WordDirection #IsSelectedtrue {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.WordDirection #IsSelectedfalse {
+    background-color: transparent;
+    color: #ffffff;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.EnterRemainingTiles,
+.LeaveMidGame {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 16px;
+    width: 250px;
+    padding: 5px 0;
+    margin-top: 20px;
+    border-radius: 50px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px; 
+    background-image: var(--topGloss);
+}
+
+.LeaveMidGame {
+    width: 165px;
+    padding: 3px 0;
+    margin: 0 0 20px;
+}
+
+.RemainingTilesInput,
+.FinalScoresSection {
+    width: 90%;
+    background-image: var(--redGradient);
+    border: var(--sectionMainBorder) solid 3px;
+    border-radius: 5px;;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px 0 30px;
+}
+
+.RemainingTilesInput h2 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.LastTilesInput input {
+    text-align: center;
+    outline: none;
+    font-size: 20px;
+    padding: 2px;
+    font-weight: bold;
+    resize: none;
+    border-radius: 50px;
+    background-color: var(--lightInputBar);
+    border: var(--lightInputBarBorder) solid 2px;
+}
+
+.LastTilesTile {
+    margin-bottom: 8px;
+}
+
+.ContinueGame,
+.FinalizeGame {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 16px;
+    width: 200px;
+    padding: 8px 0;
+    margin: 20px 5px 0;
+    border-radius: 50px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px; 
+    background-image: var(--topGloss);
+}
+
+.FinalizeGame {
+    background-color: var(--warningBtnBg);
+    border: var(--warningBtnBorder) solid 2px; 
+}
+
+.FinalScoresSection h1 {
+    margin: 0;
+    padding-bottom: 5px;
+    font-size: 28px;
+}
+
+.FinalScoresSection h2 {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 24px;
+}
+
+.RegularTile {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: var(--tileGloss);
+    height: 60px;
+    width: 60px;
+    margin: 1.5px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 12px;
+    background-color: var(--regTile);
+    border: var(--regTileBorder) solid 3px;
+    background-image: var(--tileGloss); 
+}
+
+.EndGameOptions {
+    padding-top: 30px;
+}
+
+.EndGameOptions .ExitGame,
+.EndGameOptions .SaveGame {
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 16px;
+    width: 150px;
+    padding: 10px 0;
+    margin: 20px 5px 0;
+    border-radius: 50px;
+    background-color: var(--regBtnBg);
+    border: var(--regBtnBorder) solid 2px; 
+    background-image: var(--topGloss);
+}
+
+#gameSavedtrue {
+    background-color: #9c9c9c;
+    border: #464646 solid 2px;
+}
+
+.submitWord:hover,
+.WordDirection button:hover,
+.EnterRemainingTiles:hover,
+.ContinueGame:hover,
+.FinalizeGame:hover,
+.ExitGame:hover,
+.SaveGame:hover,
+.LeaveMidGame:hover {
+    background-image: var(--lightHover);
+    cursor: pointer;
+}
+
+/* LOADING ANIMATION */
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 15px;
+}
+
+.lds-ellipsis div {
+    position: absolute;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1f4c61;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(24px, 0);
+    }
+}
