@@ -25,15 +25,19 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
     const [loadingGameHistory, setLoadingGameHistory] = useState(false);
 
     const numGameOptions = [10, 25, 50];
+    const gameTypeOptions = [2, 3, 4];
     const [selectedGameOption, setSelectedGameOption] = useState(0);
+    const [selectedGameTypeOption, setSelectedGameTypeOption] = useState(0);
 
-    const selectGameOption = (i: number) => {
+    const selectGameOption = (i: number, k: number) => {
         setSelectedGameOption(i);
-        getGameHistory(i);
+        setSelectedGameTypeOption(k);
+        getGameHistory(i, k);
     }
 
-    const isSelected = (i: number) => {
-        return i === selectedGameOption;
+    const isSelected = (i: number, k: number) => {
+        if (k === 0) return i === selectedGameOption;
+        return i === selectedGameTypeOption;
     }
 
     const getClickedGame = (index: number) => {
@@ -133,10 +137,10 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
         setGraphOptions(temp);
     }
 
-    const queryGameHistory = (players: string[], numGames: Number) => {
+    const queryGameHistory = (players: string[], numGames: Number, gameType: Number) => {
         const GET_GAME_HISTORY = gql`
-            query getScrabbleGamesWithPlayers($players: [String], $numGames: Int) {
-                getScrabbleGamesWithPlayers(players: $players, numGames: $numGames) {
+            query getScrabbleGamesWithPlayers($players: [String], $numGames: Int, $gameType: Int) {
+                getScrabbleGamesWithPlayers(players: $players, numGames: $numGames, gameType: $gameType) {
                     players
                     gamesTogether {
                         scrabbleGameId
@@ -152,7 +156,7 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
         apolloClient
             .query({
                 query: GET_GAME_HISTORY,
-                variables: { players, numGames },
+                variables: { players, numGames, gameType },
                 fetchPolicy: 'network-only'
             })
             .then((res) => {
@@ -167,18 +171,18 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
             });
     }
 
-    const getGameHistory = (i: number) => {
+    const getGameHistory = (i: number, k: number) => {
         if (loadingGameHistory) return;
 
         setshowGameHistory(false);
         setGameHistory(emptyGameHistory);
 
-        queryGameHistory(props.names, numGameOptions[i]);
+        queryGameHistory(props.names, numGameOptions[i], gameTypeOptions[k]);
     }
 
     useEffect(() => {
         setSelectedGameOption(0);
-        getGameHistory(0);
+        getGameHistory(0, 0);
       }, [props.names]);
     
 
@@ -197,12 +201,24 @@ function GameHistoryGraph(props: {names: string[], graphHeight: number, titleMsg
                             </div>
 
                             <div className="GameHistoryOptions">
+                                {gameTypeOptions.map((num, i) => (
+                                    <span>
+                                        {num > 0 ?
+                                            <button className="GameHistoryOption" id={"isSelected" + isSelected(i, 1)} key={i} onClick={() => selectGameOption(selectedGameOption, i)}>{num} player</button>
+                                            :
+                                            <button className="GameHistoryOption" id={"isSelected" + isSelected(i, 1)} key={i} onClick={() => selectGameOption(selectedGameOption, i)}> view all</button>
+                                        }
+                                    </span>
+                                ))}
+
+                                <span> | </span>
+
                                 {numGameOptions.map((num, i) => (
                                     <span>
                                     { num > 0 ?
-                                        <button className="GameHistoryOption"  id={"isSelected" + isSelected(i)} key={i} onClick={() => selectGameOption(i)}>last {num}</button>
+                                        <button className="GameHistoryOption"  id={"isSelected" + isSelected(i, 0)} key={i} onClick={() => selectGameOption(i, selectedGameTypeOption)}>last {num}</button>
                                         :
-                                        <button className="GameHistoryOption" id={"isSelected" + isSelected(i)} key={i} onClick={() => selectGameOption(i)}> view all</button>
+                                        <button className="GameHistoryOption" id={"isSelected" + isSelected(i, 0)} key={i} onClick={() => selectGameOption(i, selectedGameTypeOption)}> view all</button>
                                     }
                                     </span>
                                 ))}

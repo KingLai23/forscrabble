@@ -203,7 +203,7 @@
     max-width: 2000px;
     border-radius: 5px;
     margin-top: 16px;
-    padding: 30px 0;
+    padding: 30px 20px;
     background-color: var(--sectionMainBg);
     border: var(--sectionMainBorder) solid 3px;  
 }
@@ -397,6 +397,11 @@
 
 .FinalizeScores h1 {
     padding-top: 0;
+    font-size: 26px;
+}
+
+.FinalizeScores h2 {
+    font-size: 22px;
 }
 
 /* LOADING ANIMATION */

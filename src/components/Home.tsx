@@ -24,6 +24,7 @@ function Home() {
     }, []);
 
     const continueExistingGame = () => {
+        setVersion(parseInt(localStorage.getItem('version') || '1'));
         setPregame(false);
     }
 
@@ -34,12 +35,13 @@ function Home() {
     }
 
     const startGame = () => {
-        for (let name of enteredNames) {
-            if (name.length > 0) {
-                setUseExistingGame(false);
-                localStorage.removeItem('currentGame');
-                setPregame(false);
-            }
+        let numNames = 0;
+        for (let name of enteredNames) if (name.length > 0) numNames++;
+
+        if (numNames > 1) {
+            setUseExistingGame(false);
+            localStorage.removeItem('currentGame');
+            setPregame(false);
         }
     }
 
@@ -49,6 +51,10 @@ function Home() {
         setUseExistingGame(true);
         checkForExistingGame();
         setPregame(true);
+    }
+
+    const handleVersionSelect = (n: number) => {
+        setVersion(n);
     }
 
     return (
@@ -83,27 +89,30 @@ function Home() {
 
                         <button className="confirmPlayerNames" onClick={() => startGame()}>start game</button>
 
-                        {/* <div className="VersionSelect">
-                            <p>*pick a ui version to use*</p>
+                        <div className="VersionSelect">
+                            <p>*pick a version to use*</p>
 
-                            <button id={"isThisVersion" + (version === 0)} onClick={() => setVersion(0)}>new</button>
-                            <button id={"isThisVersion" + (version === 1)} onClick={() => setVersion(1)}>old</button>
-                        </div> */}
+                            <button id={"isThisVersion" + (version === 0)} onClick={() => handleVersionSelect(0)}>new</button>
+                            <button id={"isThisVersion" + (version === 1)} onClick={() => handleVersionSelect(1)}>classic</button>
+                        </div>
                     </div>
                     
-                    <ScrabbleWordChecker />
+                    <div className="HomePageScrabbleWordChecker">
+                        <ScrabbleWordChecker />
+                    </div>
+                    
                     <Stats />
                 </div>
 
                 :
 
                 <div className="ScrabbleGame">
-                    <SimpleScrabble names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame}/>
-                    {/* {version === 0 ?
-                        <SimpleScrabble names = {enteredNames} handleNewGame = {handleNewGame}/>
+                    {/* <SimpleScrabble names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame}/> */}
+                    {version === 0 ?
+                        <SimpleScrabble names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame}/>
                         :
                         <ScrabbleLogic names = {enteredNames} continueGame = {useExistingGame} handleNewGame = {handleNewGame} />
-                    } */}
+                    }
                 </div>
             }
         </div>

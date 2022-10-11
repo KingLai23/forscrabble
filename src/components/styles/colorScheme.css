@@ -23,8 +23,11 @@
     --topGloss: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255, 255, 255, 0.39) 50%);
     --lightHover: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
     --darkHover: linear-gradient(rgba(0, 0, 0, 0.4) 0 0);
+    --glassEffect: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
+    --glassEffectBorder: rgba(255, 255, 255, 0.35);
+    --glassEffectBorder2: rgba(255, 255, 255, 0.2);
 
-    --darkenUnfilledTile: linear-gradient(rgba(0, 0, 0, 0.28) 0 0);
+    --darkenUnfilledTile: linear-gradient(rgba(0, 0, 0, 0.2) 0 0);
 
     --tileGloss: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 60%, rgba(255, 255, 255, 0.199) 50%);
 
@@ -42,29 +45,41 @@
     --sectionSecondary: rgb(10, 16, 31);
     --sectionSecondaryBorder: rgb(32, 45, 78);  
 
-    --woodSectionBg: #b48d53;
+    --woodSectionBg: #a57f45;
     --woodSectionBorder: #614a28;
 
-    --scrabbleBoard: #721919;
-    --scrabbleBoardBorder: #3f1313;
+    --scrabbleBoard: #961f1f;
+    --scrabbleBoardBorder: #702020;
+    --scrabbleBoardInlineBorder: #f0e5d4;
 
     /* Scrabble Tile Colors */
     --filledTile: #aa895a;
 
+    --emptyRegularTile: #c6dbe4;
+    --emptyRegularTileBorder: #5f6d74;
+
+    --emptyRegularTile: #dbc4aa;
+    --emptyRegularTileBorder: rgb(150, 123, 86);
+
     --regTile: #cca774;
     --regTileBorder: #5f4f38;
+    --regTileBorder2:#9c7b4b;
 
     --doubleLetterTile: #81b0e6;
     --doubleLetterTileBorder: #3c6594;
+    --doubleLetterTileBorder2: #6d87a8;
     
     --tripleLetterTile: #117197;
     --tripleLetterTileBorder: #0c445a;
+    --tripleLetterTileBorder2: #12526b;
 
     --doubleWordTile: #cf8570;
     --doubleWordTileBorder: #7c4333;
-
+    --doubleWordTileBorder2: #bb634b;
+    
     --tripleWordTile: #be4622;
     --tripleWordTileBorder: #83211d;
+    --tripleWordTileBorder2: #a02c28;
 
     /* Input Bars */
     --darkInputBar: #0c0c0c;

@@ -75,7 +75,6 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
         temp = currentGameInfo.info;
         for (let i = 0; i < temp.length; i++) temp2.push({ word: '', letters: [] });
         setPlayerTurn(currentGameInfo.currentTurn);
-        console.log(currentGameInfo.currentTurn);
       } else {
         props.handleNewGame();
       }
@@ -87,6 +86,8 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
         }
       }
     }
+
+    localStorage.setItem('version', '1');
 
     loadScrabbleWords();
     setPlayerInfo(temp);
@@ -323,6 +324,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     setShowFinalScore(true);
 
     localStorage.removeItem('currentGame');
+    localStorage.removeItem('version');
   }
 
   const wordCheck = () => {
@@ -394,10 +396,11 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     players.sort();
 
     let gameInfo = playerInfo;
+    let boardState : string[][] = [];
 
     const SAVE_SCRABBLE_GAME = gql`
-      mutation addScrabbleGame($players: [String], $gameInfo: [GameInfoInput]) {
-        addScrabbleGame(players: $players, gameInfo: $gameInfo) {
+      mutation addScrabbleGame($players: [String], $gameInfo: [GameInfoInput], $boardState: [[String]]) {
+        addScrabbleGame(players: $players, gameInfo: $gameInfo, boardState: $boardState) {
           id
         }
       }
@@ -408,7 +411,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     apolloClient
       .mutate({
         mutation: SAVE_SCRABBLE_GAME,
-        variables: { players, gameInfo }
+        variables: { players, gameInfo, boardState }
       })
       .then((res) => {
         setIsGameSaved(true);

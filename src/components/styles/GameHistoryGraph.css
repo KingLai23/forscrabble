@@ -1,10 +1,10 @@
 .GameHistoryOption {
     text-align: center;
-    padding: 4px 0;
+    padding: 2px 0;
     margin: 0 4px 6px;
-    width: 90px;
+    width: 80px;
     outline: none;
-    font-size: 15px;
+    font-size: 14px;
     resize: none;
     border-radius: 5px;
     font-weight: bold;
@@ -13,6 +13,11 @@
     background-color: var(--darkInputBar);
     border: var(--darkInputBarBorder) solid 2px;
     color: #ffffff;
+}
+
+.GameHistoryOptions span {
+    font-size: 25px;
+    vertical-align: middle;
 }
 
 #isSelectedtrue .GameHistoryOption {

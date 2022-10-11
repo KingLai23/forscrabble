@@ -163,16 +163,16 @@
 th {
     border: none;
     text-align: center;
-    padding: 12px;
+    padding: 10px;
 }
 
 .PlayerGameInfo th {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .PlayerGameInfo td {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
 }
 
@@ -193,7 +193,7 @@ th {
 
 .IndividualPlayerHighscoreTiles p,
 .NoGameHighscoresFound p {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     margin-bottom: 10px;
 }
@@ -211,16 +211,16 @@ th {
 }
 
 .HighscoreTableTitles h2 {
-    font-size: 20px;
+    font-size: 18px;
     padding: 0;
     margin: 0;
 }
 
 .HighscoreTiles {
-    height: 50px;
-    width: 50px;
-    margin: 1.5px;
-    font-size: 25px;
+    height: 45px;
+    width: 45px;
+    margin: 1px;
+    font-size: 21px;
     font-weight: bold;
     border-radius: 10px;
     outline: none;
@@ -235,14 +235,14 @@ th {
 
 .WordHighscoreTitle p,
 .HighscoreTitle p {
-    font-size: 22px;
+    font-size: 20px;
     padding: 0;
     margin: 0;
     font-weight: bold;
 }
 
 .PlayerStatsTitle h1 {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .IndividualPlayerWordHighscore {
@@ -250,21 +250,21 @@ th {
 }
 
 .AlltimeWordHSName {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     padding-right: 20px;
 }
 
 .AlltimeGameHSName {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .WordHSTile {
-    height: 50px;
-    width: 50px;
-    margin: 1.5px;
-    font-size: 24px;
+    height: 45px;
+    width: 45px;
+    margin: 1px;
+    font-size: 21px;
     font-weight: bold;
     cursor: pointer;
     border-radius: 12px;
@@ -273,6 +273,41 @@ th {
     cursor: default;
     background-image: var(--tileGloss);
 }
+
+/* #color0,
+#color1,
+#color2,
+#color3,
+#color4 {
+    border: solid;
+    border-width: 0 3px 4px 0;
+    background-clip: padding-box;
+}
+
+#color0 {
+    background-color: var(--regTile);
+    border-color: transparent var(--regTileBorder2) var(--regTileBorder) transparent;
+}
+
+#color1 {
+    background-color: var(--doubleLetterTile);
+    border-color: transparent var(--doubleLetterTileBorder2) var(--doubleLetterTileBorder) transparent;
+}
+
+#color2 {
+    background-color: var(--tripleLetterTile);
+    border-color: transparent var(--tripleLetterTileBorder2) var(--tripleLetterTileBorder) transparent;
+}
+
+#color3 {
+    background-color: var(--doubleWordTile);
+    border-color: transparent var(--doubleWordTileBorder2) var(--doubleWordTileBorder) transparent;
+}
+
+#color4 {
+    background-color: var(--tripleWordTile);
+    border-color: transparent var(--tripleWordTileBorder2) var(--tripleWordTileBorder) transparent;
+} */
 
 #color0 {
     background-color: var(--regTile);
@@ -301,7 +336,7 @@ th {
 
 .PlayerWordHS {
     padding-left: 20px;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 500;
     vertical-align: middle;
 }

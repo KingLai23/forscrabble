@@ -162,7 +162,7 @@ function GameHistory(props: { names: string[] }) {
                                                             ))}
 
                                                             {info.lostPoints > 0 &&
-                                                                <div className="IndividualGameInfoSubtractedTiles" key={i}>
+                                                                <div className="IndividualGameInfoSubtractedTiles">
                                                                     {info.lastLetters.map((lastLetter, p) => (
                                                                         <span className="LastTiles" key={p}>
                                                                             <button className="SmallTile" id="color0">{lastLetter}</button>
@@ -193,20 +193,22 @@ function GameHistory(props: { names: string[] }) {
                                         {showIndividualGame[i] &&
                                             <div className="IndividualBoardState">
                                                 {game.boardState.length > 0 ?
-                                                    <div className="FoundBoardState">
-                                                        {boardMultipliers.map((row, g) => (
-                                                            <div className="Row" key={g}>
-                                                                {row.map((val, f) => (
-                                                                    <span className="IndividualInGameBoardTiles" key={f}>
-                                                                        { game.boardState[g][f] === '' ?
-                                                                            <button id={"GameHistoryEmptyTile" + val}>{g === 7 && f == 7 ? "★" : ""}</button>
-                                                                            :
-                                                                            <button id={"GameHistoryFilledTile" + val}>{game.boardState[g][f]}</button>
-                                                                        }
-                                                                    </span>
-                                                                ))}
-                                                            </div>
-                                                        ))}
+                                                    <div className="FoundBoardStateWrapper">
+                                                        <div className="FoundBoardState">
+                                                            {boardMultipliers.map((row, g) => (
+                                                                <div className="Row" key={g}>
+                                                                    {row.map((val, f) => (
+                                                                        <span className="IndividualInGameBoardTiles" key={f}>
+                                                                            {game.boardState[g][f] === '' ?
+                                                                                <button id={"GameHistoryEmptyTile" + val}>{g === 7 && f == 7 ? "★" : ""}</button>
+                                                                                :
+                                                                                <button id={"GameHistoryFilledTile" + val}>{game.boardState[g][f]}</button>
+                                                                            }
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                     :
                                                     <p>board layout not saved... :(</p>

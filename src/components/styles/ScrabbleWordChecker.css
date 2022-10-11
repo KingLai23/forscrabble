@@ -4,7 +4,6 @@
     color: #ffffff;
     padding: 15px 0 45px;
     text-shadow: 2px 2px 2px #000000;
-    background-image: var(--redGradient);
 }
 
 .ScrabbleWordChecker ::placeholder {
@@ -12,7 +11,8 @@
 }
 
 .ScrabbleWordChecker h1 {
-    padding: 0 0 10px;
+    padding: 10px 0 5px;
+    margin: 0;
     font-size: 24px;
 }
 
@@ -26,14 +26,14 @@
     margin-top: 8px;
     width: 260px;
     outline: none;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
     text-shadow: 2px 2px 2px #000000;
     resize: none;
 }
 
 .ScrabbleWordChecker .WordCheckBtn {
-    padding: 12px 0;
+    padding: 10px 0;
     margin-left: 20px;
     width: 100px;
     text-align: center;

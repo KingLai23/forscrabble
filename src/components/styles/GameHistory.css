@@ -92,14 +92,24 @@
     margin: auto;
 }
 
-.FoundBoardState {
-    width: 650px;
-    padding: 20px;
+.FoundBoardStateWrapper {
+    border: var(--scrabbleBoardBorder) solid 3px;
+    background-color: var(--scrabbleBoard);
+    padding: 30px;
+    width: 604px;
     margin: auto;
     margin-top: 20px;
-    border: var(--scrabbleBoardBorder) solid 3px;
-    border-radius: 10px;;
-    background-color: var(--scrabbleBoard);
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.FoundBoardState {
+    width: 600px;
+    height: 600px;
+    padding: 1px;
+    margin: auto;
+    border-radius: 2px;
+    background-color: var(--scrabbleBoardInlineBorder);
 }
 
 #GameHistoryEmptyTile0,
@@ -111,51 +121,61 @@
 }
 
 #GameHistoryEmptyTile0 {
-    background-color: var(--regTile);
-    border-color: var(--regTileBorder);
+    background-color: var(--emptyRegularTile);
+    /* border-color: var(--emptyRegularTileBorder); */
 }
 
 #GameHistoryEmptyTile1 {
     background-color: var(--doubleLetterTile);
-    border-color: var(--doubleLetterTileBorder);
+    /* border-color: var(--doubleLetterTileBorder); */
 }
 
 #GameHistoryEmptyTile2 {
     background-color: var(--tripleLetterTile);
-    border-color: var(--tripleLetterTileBorder);
+    /* border-color: var(--tripleLetterTileBorder); */
 }
 
 #GameHistoryEmptyTile3 {
     background-color: var(--doubleWordTile);
-    border-color: var(--doubleWordTileBorder);
+    /* border-color: var(--doubleWordTileBorder); */
 }
 
 #GameHistoryEmptyTile4 {
     background-color: var(--tripleWordTile);
-    border-color: var(--tripleWordTileBorder);
+    /* border-color: var(--tripleWordTileBorder); */
+}
+
+#GameHistoryFilledTile0,
+#GameHistoryFilledTile1,
+#GameHistoryFilledTile2,
+#GameHistoryFilledTile3,
+#GameHistoryFilledTile4 {
+    border: solid;
+    border-width: 0 3px 4px 0;
+    background-clip: padding-box;
 }
 
 #GameHistoryFilledTile0 {
     background-color: var(--regTile);
-    border-color: var(--regTileBorder);
+    border-color: transparent var(--regTileBorder2) var(--regTileBorder) transparent;
 }
 
 #GameHistoryFilledTile1 {
     background-color: var(--regTile);
-    border-color: var(--doubleLetterTile);
+    border-color: transparent var(--doubleLetterTileBorder2) var(--doubleLetterTileBorder) transparent;
 }
 
 #GameHistoryFilledTile2 {
     background-color: var(--regTile);
-    border-color: var(--tripleLetterTile);
+    border-color: transparent var(--tripleLetterTileBorder2) var(--tripleLetterTileBorder) transparent;
 }
 
 #GameHistoryFilledTile3 {
     background-color: var(--regTile);
-    border-color: var(--doubleWordTile);
+    border-color: transparent var(--doubleWordTileBorder2) var(--doubleWordTileBorder) transparent;
 }
 
 #GameHistoryFilledTile4 {
     background-color: var(--regTile);
-    border-color: var(--tripleWordTile);
+    border-color: transparent var(--tripleWordTileBorder2) var(--tripleWordTileBorder) transparent;
 }

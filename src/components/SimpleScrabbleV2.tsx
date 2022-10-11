@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './styles/SimpleScrabbleV2.css';
 import { gql, useApolloClient } from '@apollo/client';
+import ScrabbleWordChecker from './ScrabbleWordChecker';
 
 type singlePlayerInfo = { name: string, score: number, words: { word: string[], mult: number[], points: number, bingo: boolean }[], lostPoints: number, lastLetters: string[], otherPlayerTiles: { tiles: string[], score: number} }
 
@@ -82,12 +83,15 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const [isSavingGame, setIsSavingGame] = useState(false);
   const [saveGameText, setSaveGameText] = useState("save game");
 
+  const [turnQueue, setTurnQueue] = useState<{player: number, indices: number[][], numWordsMade: number }[]>([]);
+
   const leaveGame = () => {
     setShowGame(false);
     setBoardLetters(defaultBoardLetters);
     setFinalizedLetters(defaultFinalizedLetters);
     setEnteredWord('');
     setCurrentDisplayedWord([]);
+    setTurnQueue([]);
     setCurrentTile([-1,-1]);
     setHorizontal(true);
     setPlayerInfo([]);
@@ -107,18 +111,23 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     let boardLettersToUse = defaultBoardLetters;
     let finalizedLettersToUse = defaultFinalizedLetters;
     let playerTurnToUse = 0;
+    let turnQueueToUse = [];
 
     if (props.continueGame) {
       let currentGameInfoString = localStorage.getItem('currentGame');
-      
-      if (currentGameInfoString) {
+      let currentTurnQueueString = localStorage.getItem('turnQueue');
+
+      if (currentGameInfoString && currentTurnQueueString) {
         let currentGameInfo = JSON.parse(currentGameInfoString);
+        let currentTurnQueue = JSON.parse(currentTurnQueueString);
+
         temp = currentGameInfo.info;
         for (let i = 0; i < temp.length; i++) temp2.push({ word: '', letters: [] });
 
         boardLettersToUse = currentGameInfo.boardLetters;
         finalizedLettersToUse = currentGameInfo.finalizedLetters;
         playerTurnToUse = currentGameInfo.currentTurn;
+        turnQueueToUse = currentTurnQueue;
       } else {
         props.handleNewGame();
       }
@@ -131,11 +140,14 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
       }
     }
 
+    localStorage.setItem('version', '0');
+
     setPlayerTurn(playerTurnToUse);
     setBoardLetters(boardLettersToUse);
     setFinalizedLetters(finalizedLettersToUse);
     setPlayerInfo(temp);
     setRemainingLetters(temp2);
+    setTurnQueue(turnQueueToUse);
     setShowGame(true);
   }
 
@@ -187,7 +199,7 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
       } else {
         while (curTileX+i+offset < 15 && finalizedLetters[curTileX+i+offset][curTileY] === 1) offset++;
 
-        if (currentTile[0]+i+offset < 15) {
+        if (curTileX+i+offset < 15) {
           curWord.push([curTileX+i+offset, curTileY]);
           temp[curTileX+i+offset][curTileY] = w.charAt(i);
         } else {
@@ -421,6 +433,21 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   const calculatePoints = () => {
     let createdWords = findCreatedWords();
 
+    if (createdWords.length > 0) {
+      let tempTurnQueue = [...turnQueue];
+
+      tempTurnQueue.push(
+        {
+          player: playerTurn,
+          indices: currentDisplayedWord,
+          numWordsMade: createdWords.length
+        }
+      );
+
+      setTurnQueue(tempTurnQueue);
+      localStorage.setItem('turnQueue', JSON.stringify(tempTurnQueue));
+    }
+
     let temp = [...playerInfo];
     for (let k = 0; k < createdWords.length; k++) {
       let isThisABingo = k === 0 ? enteredWord.length === 7 : false;
@@ -444,20 +471,56 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
   }
 
   const submit = () => {
-    calculatePoints();
-
-    let temp = [...finalizedLetters];
-    for (let l of currentDisplayedWord) temp[l[0]][l[1]] = 1;
-    
-    setCurrentTile([-1, -1]);
-    setCurrentDisplayedWord([]);
-    setEnteredWord('');
-    setFinalizedLetters(temp);
-
     let nextTurn = playerTurn === playerInfo.length - 1 ? 0 : playerTurn+1;
     
-    localStorage.setItem('currentGame', JSON.stringify({info: playerInfo, currentTurn: nextTurn, boardLetters: boardLetters, finalizedLetters: finalizedLetters}));
+    if (enteredWord.length > 0) {
+      calculatePoints();
+
+      let tempFinalizedLetters = [...finalizedLetters];
+      for (let l of currentDisplayedWord) tempFinalizedLetters[l[0]][l[1]] = 1;
+
+      setCurrentDisplayedWord([]);
+      setEnteredWord('');
+      setFinalizedLetters(tempFinalizedLetters);
+
+      localStorage.setItem('currentGame', JSON.stringify({ info: playerInfo, currentTurn: nextTurn, boardLetters: boardLetters, finalizedLetters: finalizedLetters }));
+    }
+
+    setCurrentTile([-1, -1]);
     setPlayerTurn(nextTurn);
+  }
+
+  const undoLastTurn = () => {
+    let turnQueueTemp = [...turnQueue];
+    let lastTurn = turnQueueTemp.pop();
+
+    if (lastTurn) {
+      let playerInfoTemp = [...playerInfo];
+      let pointsToRemove = playerInfoTemp[lastTurn.player].words.slice(-lastTurn.numWordsMade);
+      
+      let totalPointsToRemove = 0;
+      for (let ptr of pointsToRemove) totalPointsToRemove+=ptr.points;
+
+      playerInfoTemp[lastTurn.player].words = playerInfoTemp[lastTurn.player].words.slice(0, -lastTurn.numWordsMade);
+      playerInfoTemp[lastTurn.player].score = playerInfoTemp[lastTurn.player].score - totalPointsToRemove;
+
+      let boardLettersTemp = [...boardLetters];
+      let finalizedLettersTemp = [...finalizedLetters];
+      for (let indice of lastTurn.indices) {
+        boardLettersTemp[indice[0]][indice[1]] = '';
+        finalizedLettersTemp[indice[0]][indice[1]] = 0;
+      }
+
+      let newTurn = lastTurn.player;
+
+      localStorage.setItem('turnQueue', JSON.stringify(turnQueueTemp));
+      localStorage.setItem('currentGame', JSON.stringify({info: playerInfo, currentTurn: newTurn, boardLetters: boardLettersTemp, finalizedLetters: finalizedLettersTemp}));
+      setTurnQueue(turnQueueTemp);
+      setPlayerInfo(playerInfoTemp);
+      setBoardLetters(boardLettersTemp);
+      setFinalizedLetters(finalizedLettersTemp);
+      setPlayerTurn(newTurn);
+    }
   }
 
   const configureRemainingTiles = (i: number, s: string) => {
@@ -512,6 +575,8 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
     handleUIChange(2);
 
     localStorage.removeItem('currentGame');
+    localStorage.removeItem('turnQueue');
+    localStorage.removeItem('version');
   }
 
   const saveGame = () => {
@@ -559,11 +624,173 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
 
       {showGame &&
         <div>
+          <div className="WordEnterSection">
+            <div className="InGameContainer">
+              <div className="InGameBoardContainer">
+                <div className="InGameScrabbleBoardWrapper">
+                  <div className="InGameScrabbleBoard">
+                    {multipliers.map((row, i) => (
+                      <div className="Row" key={i}>
+                        {row.map((val, k) => (
+                          <span className="IndividualInGameBoardTiles" key={k}>
+                            {boardLetters[i][k] === '' && !(currentTile[0] === i && currentTile[1] === k) ?
+                              <span>
+                                <button id={"EmptyTile" + val} onClick={() => setSelectedTile(i, k)}>{i === 7 && k === 7 ? "★" : ""}</button>
+                              </span>
+                              :
+                              <span>
+                                <button id={"FilledTile" + val}>{boardLetters[i][k]}</button>
+                              </span>
+
+                            }
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="PlayerInteractContainer">
+                <div className="PlayerInteractSection">
+                  {currentUI === 0 &&
+                    <div className="InGamePlayerInteract">
+                      <div className="UndoTurnSection">
+                        <button onClick={() => undoLastTurn()}>undo last turn</button>
+                      </div>
+
+                      <div className="WordInputAndButtons">
+                        <h2>{playerInfo[playerTurn].name}'s turn!</h2>
+
+                        <div className="V1">
+                          <input
+                            placeholder={"scrabble"}
+                            name="wordInput"
+                            id="wordInput"
+                            autoComplete='off'
+                            value={enteredWord}
+                            onChange={(e) => displayWord(e.target.value, horiztonal, currentTile[0], currentTile[1])}
+                          />
+
+                          <button className="submitWord" onClick={() => submit()}>{enteredWord === '' ? 'next turn' : 'end turn'}</button>
+
+                          <p id='HowToTypeBlanks'>***note: for blanks, type '-'</p>
+
+                          <div className="WordDirection">
+                            <button className="HorizontalWD" id={"IsSelected" + horiztonal} onClick={() => setWordOrientation(true)}>horizontal</button>
+                            <button className="VerticalWD" id={"IsSelected" + !horiztonal} onClick={() => setWordOrientation(false)}>vertical</button>
+                          </div>
+                        </div>
+
+                        {/* <div className="V2">
+                          {validLettersUpper.split("").map((letter, i) => (
+                            <button className="SmallTile" id="color0">{letter}</button>
+                          ))}
+                        </div> */}
+                      </div>
+
+                      <div className="QuickScores">
+                        <div className="IndividualQuickScoreContainer">
+                          {playerInfo.map((info, i) => (
+                            <div className='IndividualQuickScore'>
+                              <h2>{info.name}<br></br>{info.score}</h2>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button className="EnterRemainingTiles" onClick={() => handleUIChange(1)}>enter remaining tiles</button>
+                      <br></br>
+                      <button className="LeaveMidGame" onClick={() => leaveGame()}>leave game</button>
+                    </div>
+                  }
+
+                  {currentUI === 1 &&
+                    <div className="RemainingTilesInput">
+                      <h2>what tiles remain?</h2>
+                      <div className="PlayerLastTilesSectionV2">
+                        {playerInfo.map((info, i) => (
+                          <div className="LastTilesInputV2" key={i}>
+                            <h2>{info.name}</h2>
+
+                            <div className="LastTilesTile">
+                              {remainingLetters[i].letters.length > 0 ?
+                                <div>
+                                  {remainingLetters[i].letters.map((letter, j) => (
+                                    <span className="IndividualTile" key={j}>
+                                      <button className="SmallTile" id="color0">{letter}</button>
+                                    </span>
+                                  ))}
+                                </div>
+                                :
+                                <div className="InvisiblePlaceholderTile">no tiles left</div>
+                              }
+                              
+                            </div>
+
+                            <input
+                              placeholder="what's left?"
+                              name="playerNameInput"
+                              id="playerNameInput"
+                              autoComplete='off'
+                              value={remainingLetters[i].word}
+                              onChange={(e) => configureRemainingTiles(i, e.target.value)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="LastTileSectionButtons">
+                        <button className="ContinueGame" onClick={() => handleUIChange(0)}>continue game</button>
+                        <button className="FinalizeGame" onClick={() => finalizeGame()}>end game</button>
+                      </div>
+                    </div>
+                  }
+
+                  {currentUI === 2 &&
+                    <div className="FinalScoresSection">
+                      <h1>final scores</h1>
+
+                      <div className="FinalScoreSectionsV2">
+                        {playerInfo.map((info, i) => (
+                          <div className="PlayerIndividualScoreV2" key={i}>
+                            <h2>{info.name}</h2>
+
+                            {info.score.toString().split('').map((num, k) => (
+                              <span className="ScoreTiles" key={k}>
+                                <button className="RegularTile">{num}</button>
+                              </span>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="EndGameOptions">
+                        <button className="ExitGame" onClick={() => leaveGame()}>exit game</button>
+                        <button className="SaveGame" id={"gameSaved" + isGameSaved} onClick={() => saveGame()}>
+                          {isSavingGame ?
+                            <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                            :
+                            <span>{saveGameText}</span>
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="InGameWordCheck">
+            < ScrabbleWordChecker />
+          </div>
+          
           <div className="ScoreInfo">
             <div className="ScoreTable">
               {playerInfo.map((info, i) => (
                 <div className="PlayerScore" key={i}>
-                  <h2>{info.name}</h2>
+                  <h2>{info.name} • {info.score}</h2>
 
                   {info.words.map((wordInfo, k) => (
                     <div className="PlayerWordHistory" key={k}>
@@ -616,123 +843,6 @@ function SimpleScrabble(props: {names: string[], continueGame: boolean, handleNe
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="WordEnterSection">
-            <button className="LeaveMidGame" onClick={() => leaveGame()}>leave game</button>
-
-            <div className="InGameScrabbleBoard">
-              {multipliers.map((row, i) => (
-                <div className="Row" key={i}>
-                  {row.map((val, k) => (
-                    <span className="IndividualInGameBoardTiles" key={k}>
-                      {boardLetters[i][k] === '' && !(currentTile[0] === i && currentTile[1] === k) ?
-                        <span>
-                          <button id={"EmptyTile" + val} onClick={() => setSelectedTile(i, k)}>{i === 7 && k === 7 ? "★" : ""}</button>
-                        </span>
-                        :
-                        <span>
-                          <button id={"FilledTile" + val}>{boardLetters[i][k]}</button>
-                        </span>
-                        
-                      }
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-            
-            {currentUI === 0 &&
-              <div className="WordInputAndButtons">
-                <h2>{playerInfo[playerTurn].name}'s turn!</h2>
-
-                <input
-                  placeholder={"type a word"}
-                  name="wordInput"
-                  id="wordInput"
-                  autoComplete='off'
-                  value={enteredWord}
-                  onChange={(e) => displayWord(e.target.value, horiztonal, currentTile[0], currentTile[1])}
-                />
-
-                <button className="submitWord" onClick={() => submit()}>end turn</button>
-
-                <div className="WordDirection">
-                  <button id={"IsSelected" + horiztonal} onClick={() => setWordOrientation(true)}>horizontal</button>
-                  <button id={"IsSelected" + !horiztonal} onClick={() => setWordOrientation(false)}>vertical</button>
-                </div>
-
-                <div>
-                  <button className="EnterRemainingTiles" onClick={() => handleUIChange(1)}>enter remaining tiles</button>
-                </div>
-              </div>
-            }
-
-            {currentUI === 1 &&
-              <div className="RemainingTilesInput">
-                <div className="PlayerLastTilesSection">
-                  {playerInfo.map((info, i) => (
-                    <div className="LastTilesInput" key={i}>
-                      <h2>{info.name}</h2>
-
-                      <div className="LastTilesTile">
-                        {remainingLetters[i].letters.map((letter, j) => (
-                          <span className="IndividualTile" key={j}>
-                            <button className="SmallTile" id="color0">{letter}</button>
-                          </span>
-                        ))}
-                      </div>
-
-                      <input
-                        placeholder="what's left?"
-                        name="playerNameInput"
-                        id="playerNameInput"
-                        autoComplete='off'
-                        value={remainingLetters[i].word}
-                        onChange={(e) => configureRemainingTiles(i, e.target.value)}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="LastTileSectionButtons">
-                  <button className="ContinueGame" onClick={() => handleUIChange(0)}>continue game</button>
-                  <button className="FinalizeGame" onClick={() => finalizeGame()}>end game</button>
-                </div>
-              </div>
-            }
-            
-            {currentUI === 2 &&
-              <div className="FinalScoresSection">
-                <h1>final scores</h1>
-
-                <div className="FinalScoreSections">
-                  {playerInfo.map((info, i) => (
-                    <div className="PlayerIndividualScore" key={i}>
-                      <h2>{info.name}</h2>
-
-                      {info.score.toString().split('').map((num, k) => (
-                        <span className="ScoreTiles" key={k}>
-                          <button className="RegularTile">{num}</button>
-                        </span>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="EndGameOptions">
-                  <button className="ExitGame" onClick={() => leaveGame()}>exit game</button>
-                  <button className="SaveGame" id={"gameSaved" + isGameSaved} onClick={() => saveGame()}>
-                    {isSavingGame ?
-                      <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                      :
-                      <span>{saveGameText}</span>
-                    }
-                  </button>
-                </div>
-              </div>
-            }
-
           </div>
         </div>
       }

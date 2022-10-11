@@ -19,22 +19,26 @@ function StatsFinder() {
             twoPlayer: {
                 gamesPlayed: number,
                 gamesWon: number,
-                averageScore: number
+                averageScore: number,
+                sd: number
             },
             threePlayer: {
                 gamesPlayed: number,
                 gamesWon: number,
-                averageScore: number
+                averageScore: number,
+                sd: number
             },
             fourPlayer: {
                 gamesPlayed: number,
                 gamesWon: number,
-                averageScore: number
+                averageScore: number,
+                sd: number
             },
             total: {
                 gamesPlayed: number,
                 gamesWon: number,
-                averageScore: number
+                averageScore: number,
+                sd: number
             }
         },
         gameHighscores: {
@@ -51,22 +55,26 @@ function StatsFinder() {
             twoPlayer: {
                 gamesPlayed: 0,
                 gamesWon: 0,
-                averageScore: 0
+                averageScore: 0,
+                sd: 0
             },
             threePlayer: {
                 gamesPlayed: 0,
                 gamesWon: 0,
-                averageScore: 0
+                averageScore: 0,
+                sd: 0
             },
             fourPlayer: {
                 gamesPlayed: 0,
                 gamesWon: 0,
-                averageScore: 0
+                averageScore: 0,
+                sd: 0
             },
             total: {
                 gamesPlayed: 0,
                 gamesWon: 0,
-                averageScore: 0
+                averageScore: 0,
+                sd: 0
             }
         },
         gameHighscores: {
@@ -222,21 +230,25 @@ function StatsFinder() {
                           gamesPlayed
                           gamesWon
                           averageScore
+                          sd
                         }
                         threePlayer {
                           gamesPlayed
                           gamesWon
                           averageScore
+                          sd
                         }
                         fourPlayer {
                           gamesPlayed
                           gamesWon
                           averageScore
+                          sd
                         }
                         total {
                           gamesPlayed
                           gamesWon
                           averageScore
+                          sd
                         }
                     }
                     gameHighscores {
@@ -396,29 +408,34 @@ function StatsFinder() {
                                                 <td>games played</td>
                                                 <td>wins</td>
                                                 <td>average score</td>
+                                                <td>std dev</td>
                                             </tr>
                                             <tr>
                                                 <td>2 players</td>
                                                 <th>{playerStats.gamesInfo.twoPlayer.gamesPlayed}</th>
                                                 <th>{playerStats.gamesInfo.twoPlayer.gamesWon}</th>
                                                 <th>{playerStats.gamesInfo.twoPlayer.averageScore}</th>
+                                                <th>{playerStats.gamesInfo.twoPlayer.sd}</th>
                                             </tr>
                                             <tr>
                                                 <td>3 players</td>
                                                 <th>{playerStats.gamesInfo.threePlayer.gamesPlayed}</th>
                                                 <th>{playerStats.gamesInfo.threePlayer.gamesWon}</th>
                                                 <th>{playerStats.gamesInfo.threePlayer.averageScore}</th>
+                                                <th>{playerStats.gamesInfo.threePlayer.sd}</th>
                                             </tr>
                                             <tr>
                                                 <td>4 players</td>
                                                 <th>{playerStats.gamesInfo.fourPlayer.gamesPlayed}</th>
                                                 <th>{playerStats.gamesInfo.fourPlayer.gamesWon}</th>
                                                 <th>{playerStats.gamesInfo.fourPlayer.averageScore}</th>
+                                                <th>{playerStats.gamesInfo.fourPlayer.sd}</th>
                                             </tr>
                                             <tr>
                                                 <td>total</td>
                                                 <th>{playerStats.gamesInfo.total.gamesPlayed}</th>
                                                 <th>{playerStats.gamesInfo.total.gamesWon}</th>
+                                                <th>-</th>
                                                 <th>-</th>
                                             </tr>
                                         </table>
